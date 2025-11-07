@@ -60,15 +60,17 @@ This project follows a **multi-agent mesh architecture**:
 - Support user interaction with orchestrator
 
 ### Domain Models
-- **Abstract/Arbitrary**: Domain models are conceptual specialist reasoning services
-- **Bow-Tie Pattern**: Each domain model's LLM follows a bow-tie pattern
-  - Starts as general-purpose or for-purpose LLM (e.g., coding-specific LLM for coding tasks)
-  - Constrained by models provided to conform to domain requirements
+- **Static Model Descriptions**: Domain models are static, machine-readable files (not services)
+- **Format**: Turtle (preferred), JSON, or Markdown (least preferred)
+- **Purpose**: Model description of a domain that an LLM uses to assume the position of a stakeholder for that domain
+- **Machine-Readable**: Must be machine-readable since an LLM needs to read it
+- **Bow-Tie Pattern**: Services using domain models follow a bow-tie pattern
+  - LLM starts as general-purpose or for-purpose (e.g., coding-specific LLM for coding tasks)
+  - Constrained by domain model to conform to domain requirements
   - Results in domain-specific behavior
-- Define domain ontology in RDF/Turtle (when implementing)
-- Implement tool adapters for domain-specific tools (requirements being determined)
-- Expose reasoning capabilities via API
-- Register in MCP configuration
+- **Implementation**: Services use domain models to provide domain-specific reasoning capabilities
+- **Tool Adapters**: Services implement tool adapters for domain-specific tools (requirements being determined)
+- **MCP Registration**: Register services using domain models in MCP configuration
 
 ### Orchestration Logic
 
