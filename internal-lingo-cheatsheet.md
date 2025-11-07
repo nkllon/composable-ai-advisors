@@ -6,6 +6,7 @@
 |------|--------------------------|
 | **LIM42** | Your design-scaffolding workflow toolset / template generator. |
 | **BFG9K** | The agent-orchestration framework used in your multi-agent mesh. |
+| **BeastMost Systems** | [Definition pending] |
 | **Spore / ContextSpore / PromptSpore** | Modular, reusable packets of context or prompt logic for your agents. |
 | **MCP (Model Context Protocol)** | The protocol that governs how agents exchange models, context, data, and metadata. |
 | **.cursor/rules/*.mdc** | Directory naming convention: workspace (".cursor"), rule sets ("rules"), modelling context files ("*.mdc"). |
