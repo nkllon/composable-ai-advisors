@@ -58,8 +58,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🧭 Ontology Framework</h1>
-        <p>Manage Plans of Day and Spore Registries</p>
+        <h1>Composable AI Advisors</h1>
+        <p>Multi-Agent Mesh Architecture | Plans of Day & Spore Registries</p>
       </header>
 
       <div className="container">
@@ -217,7 +217,7 @@ function App() {
       </div>
 
       <footer>
-        <p>Powered by Google Cloud Run & Gemini AI | Ontology Framework v1.0.0</p>
+        <p>Powered by Google Cloud Run & Gemini AI | Composable AI Advisors | BeastMost Systems / nkllon observatory</p>
       </footer>
     </div>
   );
