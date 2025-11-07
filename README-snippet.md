@@ -1,7 +1,7 @@
 # Composable AI Advisors — Alignment Notes
 
 This repo uses a **multi‑agent mesh** pattern:
-- A **general Orchestration LLM** (BFG9K) decomposes tasks and coordinates specialists.
+- A **general Orchestration LLM** decomposes tasks and coordinates specialists.
 - **Domain Models** expose tools + rule packs for their domain (A/B/C shown for reference).
 - The **MCP Context & Trace layer** provides secure context exchange, provenance, and audit.
 - **Client apps** (Viewer, Mapper, Legal DocBot, OSINT, Guidance, Audit) consume outputs.

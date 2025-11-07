@@ -1,0 +1,135 @@
+# Architecture Rules - Multi-Agent Mesh
+
+## Core Pattern
+
+This project follows a **multi-agent mesh architecture**:
+
+1. **Orchestration Layer**: General-purpose LLM constrained by models (bow-tie pattern) decomposes tasks and coordinates
+2. **Domain Models**: Specialist reasoning services (A, B, C, etc.)
+3. **MCP Layer**: Context exchange, traceability, and audit
+4. **Client Layer**: Applications consuming orchestrated outputs
+
+## Service Design Principles
+
+### Independence
+- Each domain model is an independent service
+- Services communicate via orchestration, not directly
+- Services can be deployed and scaled independently
+
+### Orchestration
+- General LLM routes tasks to appropriate domain models
+- Orchestrator synthesizes results from multiple services
+- Task decomposition happens at orchestration layer
+
+### Context Exchange
+- All inter-agent communication via MCP protocol
+- Context shared through Spores (portable context bundles)
+- Maintain provenance and audit trails
+
+## Anti-Patterns
+
+❌ **Direct Service-to-Service Calls**: Services should not call each other directly
+✅ **Orchestration Routing**: All coordination via orchestrator
+
+❌ **Shared State**: Don't share mutable state between services
+✅ **Context Exchange**: Use MCP and Spores for context sharing
+
+❌ **Monolithic Services**: Don't create services that do everything
+✅ **Domain Focus**: Each service handles specific domain expertise
+
+## Implementation Guidelines
+
+### Backend Services
+- FastAPI for API endpoints
+- Each service should have clear domain boundaries
+- Expose tools and rule packs via API
+- Support MCP context exchange
+
+### Frontend Applications
+- React-based UI components
+- Consume orchestrated outputs
+- Display multi-domain results
+- Support user interaction with orchestrator
+
+### Domain Models
+- **Abstract/Arbitrary**: Domain models are conceptual specialist reasoning services
+- **Bow-Tie Pattern**: Each domain model's LLM follows a bow-tie pattern
+  - Starts as general-purpose or for-purpose LLM (e.g., coding-specific LLM for coding tasks)
+  - Constrained by models provided to conform to domain requirements
+  - Results in domain-specific behavior
+- Define domain ontology in RDF/Turtle (when implementing)
+- Implement tool adapters for domain-specific tools (requirements being determined)
+- Expose reasoning capabilities via API
+- Register in MCP configuration
+
+### Orchestration Logic
+
+The system uses **three bow-tie patterns** (all are present):
+
+1. **Architectural Bow-Tie**: Many domain models → Constrained orchestrator → Many client applications
+   - This is the overall system architecture pattern
+   
+2. **Orchestrator Internal Bow-Tie**: General-purpose LLM → Constrained by models → Model-driven behavior
+   - This is how the orchestrator itself works internally
+   
+3. **Domain Model/LLM Internal Bow-Tie**: Each participant LLM (general-purpose or for-purpose) → Constrained by models → Domain-specific behavior
+   - Each domain model's LLM starts as a general-purpose or for-purpose LLM (e.g., coding-specific)
+   - Models constrain each LLM to conform to domain requirements
+   - This is how each domain model's reasoning engine works internally
+
+**Key Points**:
+- **General-Purpose LLM**: The orchestrator is a general-purpose LLM
+- **Model Constraint**: Models (RDF/Turtle or Markdown) constrain/whittle down the LLM's behavior
+- **Model Sources**: Model can be RDF/Turtle files or Markdown documents
+- **Perspective Evaluation**: Build model for orchestrator to evaluate different perspectives
+- **Confidence Threshold**: Typically 90% (configurable)
+- **"Heat"**: Confidence measure based on how orchestrator is constructed
+- **Escalation**: If confidence < threshold, escalate to human agent
+- **Tested**: Orchestration mechanism is tested and working
+
+## Architecture Diagrams
+
+### Modular AI Architecture (Core Layers)
+
+```
+┌─────────────────────────────────────┐
+│        Orchestration                │
+│   (General-Purpose LLM)            │
+│   Constrained by Turtle/Markdown   │
+│   (Bow-Tie Pattern)                │
+└─────────────────────────────────────┘
+                 │
+    ┌────────────┼────────────┐
+    ▼            ▼            ▼
+┌─────────┐ ┌─────────┐ ┌─────────┐
+│  MaaS   │ │  MaaS   │ │  MaaS   │
+│(Domain  │ │(Domain  │ │(Domain  │
+│ Model)  │ │ Model)  │ │ Model)  │
+└─────────┘ └─────────┘ └─────────┘
+    │            │            │
+    └────────────┼────────────┘
+                 ▼
+┌─────────────────────────────────────┐
+│         Context MCP                 │
+│   (Model Context Protocol)          │
+│   Secure Context Exchange           │
+└─────────────────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────┐
+│         Data Metadata                │
+│   (RDF/Turtle, Provenance)           │
+└─────────────────────────────────────┘
+```
+
+### Reference Files
+- `composable-ai-advisors-architecture.puml` (PlantUML)
+- `composable-ai-advisors-architecture.dot` (Graphviz)
+
+## When Adding New Components
+
+1. **Identify Domain**: What domain expertise does this provide?
+2. **Define Boundaries**: What are the clear service boundaries?
+3. **Orchestration**: How does orchestrator route to this service?
+4. **MCP Integration**: How does this participate in context exchange?
+5. **Tool Adapters**: What tools/APIs does this connect to?

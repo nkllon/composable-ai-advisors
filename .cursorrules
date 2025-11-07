@@ -1,0 +1,101 @@
+# Composable AI Advisors - Cursor Rules
+
+## Project Overview
+
+This is the **Composable AI Advisors** project, a multi-agent mesh architecture system that uses:
+- **Orchestration**: General-purpose LLM constrained by models (bow-tie pattern) that decomposes tasks and coordinates specialists
+- **Domain Models**: Specialist reasoning services exposing tools + rule packs
+- **MCP (Model Context Protocol)**: Protocol for secure context exchange, provenance, and audit
+- **Spores**: Portable context/prompt bundles for multi-agent continuity
+- **RDF/Turtle Ontologies**: Semantic web standards for structured data
+
+## Architecture Principles
+
+1. **Multi-Agent Mesh**: Decompose general AI into a service-mesh of specialized reasoning engines
+2. **MaaS (Models as a Service)**: Each specialist reasoner runs as its own service/API
+3. **Orchestration**: General LLM coordinates domain-specific services
+4. **Context Exchange**: Use MCP for secure context, tools, and traceability
+5. **Ontology-Driven**: Use RDF/Turtle for structured, interoperable data
+
+## Key Terminology
+
+Refer to `internal-lingo-cheatsheet.md` for full glossary. Key terms:
+- **LIM42**: Design-scaffolding workflow toolset
+- **BFG9K**: Agent-orchestration framework (separate product/repo, not part of this architecture)
+- **Spore/ContextSpore/PromptSpore**: Modular, reusable context/prompt packets
+- **MCP**: Model Context Protocol for agent communication
+- **Mesh**: Network of specialist reasoning services
+
+## Development Guidelines
+
+### Code Organization
+
+- **Backend**: FastAPI service in `backend/` - handles RDF processing, API endpoints, Gemini AI integration
+- **Frontend**: React app in `frontend/` - UI for visualizing PoDs, Spores, and relationships
+- **Ontologies**: RDF/Turtle files at root (`*.ttl`) - semantic data definitions
+- **Documentation**: Markdown files for architecture, deployment, and project info
+
+### RDF/Turtle Conventions
+
+- Use namespaces defined in `caa-glossary.ttl`
+- Follow ontology patterns from existing `.ttl` files
+- Maintain semantic relationships and provenance
+- See `.cursor/rules/ontology.mdc` for detailed conventions
+
+### MCP Integration
+
+- MCP configuration will be in `.mcp/` directory (to be added)
+- Context exchange follows MCP protocol specifications
+- Tool adapters connect reasoning agents to concrete tools/APIs
+- Maintain traceability and audit trails
+
+### Multi-Agent Patterns
+
+- Design services as independent, orchestrated components
+- Use Spores for context continuity across agent sessions
+- Follow service mesh patterns (not monolithic architecture)
+- Each domain model should expose clear API boundaries
+
+## File-Specific Rules
+
+### Python (Backend)
+- Use FastAPI for API endpoints
+- RDFLib for RDF/Turtle processing
+- Follow PEP 8 style guidelines
+- Type hints recommended
+
+### JavaScript/React (Frontend)
+- React 18.2+ patterns
+- Axios for API calls
+- Modern ES6+ syntax
+- Component-based architecture
+
+### RDF/Turtle Files
+- Follow existing namespace conventions
+- Use SHACL shapes for validation (see `caa-glossary.ttl`)
+- Maintain ontology relationships
+- Document new classes/properties
+
+## When Making Changes
+
+1. **Check Architecture**: Ensure changes align with multi-agent mesh pattern
+2. **Update Ontologies**: If adding new concepts, update relevant `.ttl` files
+3. **Maintain MCP Compatibility**: Consider context exchange implications
+4. **Preserve Spore Patterns**: Maintain context continuity mechanisms
+5. **Document Changes**: Update relevant `.md` files
+
+## Reference Files
+
+- `agents.md` - Comprehensive AI agent guidance
+- `internal-lingo-cheatsheet.md` - Terminology glossary
+- `caa-glossary.ttl` - Core ontology definitions
+- `ARCHITECTURE.md` - System architecture details
+- `.cursor/rules/*.mdc` - Detailed rule sets (when created)
+
+## Important Notes
+
+- The current README.md is hackathon-focused and may not reflect current project state
+- MCP configuration will be added separately
+- This project emphasizes composability and modularity over monolithic design
+- Always consider multi-agent coordination when designing features
+
