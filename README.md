@@ -188,6 +188,14 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 4. **Context Exchange**: Use MCP for secure context, tools, and traceability
 5. **Ontology-Driven**: Use RDF/Turtle for structured, interoperable data
 
+## Benefits of the Modular Pattern
+
+- **Domain Accuracy**: Dedicated expert models reduce hallucinations and enforce domain logic
+- **Personalization**: The context layer personalizes outputs per user and data source without retraining the general model
+- **Governance**: Clear service boundaries make decisions auditable and explainable
+- **Maintainability**: Independent upgrades per domain reduce time-to-change
+- **Cost & Performance**: Right-size models and infrastructure by workload rather than one giant footprint
+
 ## Orchestration Logic
 
 The orchestrator uses **three bow-tie patterns** (all are present):

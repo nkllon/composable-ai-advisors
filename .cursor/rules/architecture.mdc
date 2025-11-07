@@ -26,6 +26,14 @@ This project follows a **multi-agent mesh architecture**:
 - Context shared through Spores (portable context bundles)
 - Maintain provenance and audit trails
 
+## Benefits of the Modular Pattern
+
+- **Domain Accuracy**: Dedicated expert models reduce hallucinations and enforce domain logic
+- **Personalization**: The context layer personalizes outputs per user and data source without retraining the general model
+- **Governance**: Clear service boundaries make decisions auditable and explainable
+- **Maintainability**: Independent upgrades per domain reduce time-to-change
+- **Cost & Performance**: Right-size models and infrastructure by workload rather than one giant footprint
+
 ## Anti-Patterns
 
 ❌ **Direct Service-to-Service Calls**: Services should not call each other directly
