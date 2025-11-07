@@ -121,6 +121,12 @@
     - Test metrics aggregation
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
+- [ ] 6.5 Implement per-service rate limiting
+  - Enforce request rate per MCP server (default 100 rpm, configurable)
+  - Apply to context exchange and tool invocation endpoints
+  - Expose current limiter status via metrics
+  - _Requirements: Design/Rate Limiting_
+
 - [ ] 7. Implement Orchestrator Integration
   - [ ] 7.1 Create OrchestratorService class
     - Implement `OrchestratorService` class

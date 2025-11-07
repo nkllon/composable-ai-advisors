@@ -1,0 +1,19 @@
+@prefix caa: <http://nkllon.com/ontology/caa#> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Minimal SHACL constraints for Domain Model instance data
+
+caa:DomainModelRequiredFieldsShape a sh:NodeShape ;
+  sh:targetClass caa:DomainModel ;
+  sh:property [
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:message "DomainModel must have a label." ;
+  ] ;
+  sh:property [
+    sh:path rdfs:comment ;
+    sh:minCount 1 ;
+    sh:message "DomainModel must have a description (rdfs:comment)." ;
+  ] .
+
