@@ -1,0 +1,121 @@
+---
+inclusion: always
+---
+# Ontology Rules - RDF/Turtle Conventions
+
+## Namespace Conventions
+
+### Core Namespaces
+- `caa:` - Composable AI Advisors ontology (`http://nkllon.com/ontology/caa#`)
+- `meta:` - Metadata namespace (`http://nkllon.com/ontology/meta#`)
+- Standard namespaces: `rdf:`, `rdfs:`, `owl:`, `sh:`, `dct:`, `prov:`, `time:`
+
+### Usage
+- Always declare namespaces at the top of `.ttl` files
+- Use appropriate namespace for each concept
+- Follow existing patterns in `caa-glossary.ttl`
+
+## RDF/Turtle File Structure
+
+### Header Section
+```turtle
+@prefix caa: <http://nkllon.com/ontology/caa#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+# ... other prefixes
+
+caa: a owl:Ontology ;
+  dct:title "..." ;
+  dct:creator "..." ;
+  dct:description "..." .
+```
+
+### Class Definitions
+- Use `owl:Class` for core classes
+- Provide `rdfs:label` and `rdfs:comment`
+- Link to related classes via properties
+
+### Property Definitions
+- Use `owl:ObjectProperty` or `owl:DatatypeProperty`
+- Define domain and range
+- Add `rdfs:label` and `rdfs:comment`
+
+### Instance Data
+- Use URIs for resources
+- Use literals for data values
+- Maintain relationships via properties
+
+## Key Ontology Classes
+
+From `caa-glossary.ttl`:
+- `caa:Orchestrator` - Orchestration LLM
+- `caa:DomainModel` - Specialist reasoning service
+- `caa:ToolAdapter` - Tool connection adapter
+- `caa:RuleSet` - Rule pack
+- `caa:Spore` - Context/prompt bundle
+- `caa:ContextSpore` - Context bundle
+- `caa:PromptSpore` - Prompt bundle
+
+## SHACL Shapes
+
+- Use SHACL for validation when needed
+- Define shapes for complex structures
+- Reference shapes in `caa-glossary.ttl`
+
+## Provenance Tracking
+
+Always include provenance information:
+- `prov:wasGeneratedBy` - What generated this
+- `prov:wasDerivedFrom` - Source data
+- `prov:generatedAtTime` - Timestamp
+- `dct:creator` - Creator information
+
+## File Organization
+
+### Root Level `.ttl` Files
+- `caa-glossary.ttl` - Core ontology definitions
+- `guidance.ttl` - Guidance registry (PoDs)
+- `spore_registry.ttl` - Spore tracking
+
+### Documentation `.ttl` Files
+- `docs/pod/YYYY/PoD_YYYY-MM-DD.ttl` - Individual Plans of Day
+
+## Best Practices
+
+1. **Consistency**: Follow existing patterns
+2. **Relationships**: Always maintain semantic links
+3. **Documentation**: Include labels and comments
+4. **Validation**: Use SHACL when appropriate
+5. **Provenance**: Track creation and modification
+
+## Common Patterns
+
+### Defining a New Class
+```turtle
+caa:NewClass a owl:Class ;
+  rdfs:label "New Class" ;
+  rdfs:comment "Description of the class" ;
+  rdfs:subClassOf caa:RelatedClass .
+```
+
+### Creating an Instance
+```turtle
+caa:instance-123 a caa:SomeClass ;
+  rdfs:label "Instance Name" ;
+  caa:hasProperty caa:related-instance ;
+  prov:wasGeneratedBy caa:some-process ;
+  prov:generatedAtTime "2025-01-01T00:00:00Z"^^xsd:dateTime .
+```
+
+### Linking Resources
+```turtle
+caa:pod-123 caa:hasSpore caa:spore-456 .
+caa:spore-456 caa:linksTo caa:milestone-789 .
+```
+
+## When Working with Ontologies
+
+1. **Check Existing**: Review `caa-glossary.ttl` first
+2. **Follow Patterns**: Use existing class/property patterns
+3. **Maintain Links**: Keep semantic relationships
+4. **Add Provenance**: Include creation/modification info
+5. **Update Glossary**: Add new classes to glossary if core concepts

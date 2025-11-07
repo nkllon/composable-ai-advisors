@@ -1,0 +1,145 @@
+---
+inclusion: always
+---
+# Coding Standards
+
+## Python (Backend)
+
+### Style
+- Follow PEP 8 style guide
+- Use type hints for function signatures
+- Maximum line length: 100 characters
+- Use 4 spaces for indentation
+
+### FastAPI Patterns
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional, List
+
+class RequestModel(BaseModel):
+    field: str
+    optional_field: Optional[int] = None
+
+@app.post("/endpoint")
+async def endpoint(request: RequestModel) -> ResponseModel:
+    # Implementation
+    pass
+```
+
+### RDF Processing
+- Use RDFLib for RDF/Turtle operations
+- Follow namespace conventions from ontology files
+- Maintain semantic relationships
+- Include provenance information
+
+### Error Handling
+- Use FastAPI HTTPException for API errors
+- Provide meaningful error messages
+- Log errors appropriately
+- Handle RDF parsing errors gracefully
+
+## JavaScript/React (Frontend)
+
+### Style
+- Use modern ES6+ syntax
+- Prefer const/let over var
+- Use arrow functions for callbacks
+- Follow React best practices
+
+### React Patterns
+```javascript
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const Component = ({ prop }) => {
+  const [state, setState] = useState(null);
+  
+  useEffect(() => {
+    // Side effects
+  }, [dependencies]);
+  
+  return <div>...</div>;
+};
+```
+
+### API Integration
+- Use Axios for HTTP requests
+- Handle async/await properly
+- Provide loading and error states
+- Use try/catch for error handling
+
+### Component Structure
+- Functional components with hooks
+- Separate concerns (data fetching, presentation)
+- Reusable components
+- Clear prop interfaces
+
+## RDF/Turtle Files
+
+### Formatting
+- Use consistent indentation (2 spaces)
+- Group related triples
+- Use blank lines for readability
+- Comment complex structures
+
+### Naming Conventions
+- Use descriptive URIs
+- Follow namespace conventions
+- Use kebab-case for instance identifiers
+- Maintain consistent naming patterns
+
+## General Principles
+
+### Code Organization
+- Keep functions focused and small
+- Separate concerns (API, business logic, data)
+- Use meaningful variable names
+- Comment complex logic
+
+### Testing
+- Write tests for critical paths
+- Test API endpoints
+- Test RDF processing
+- Test component rendering
+
+### Documentation
+- Document public APIs
+- Comment complex algorithms
+- Update README for new features
+- Maintain architecture documentation
+
+## File Naming
+
+- Python: `snake_case.py`
+- JavaScript: `camelCase.js` or `PascalCase.jsx`
+- RDF: `kebab-case.ttl`
+- Config: `kebab-case.yaml` or `kebab-case.json`
+
+## Import Organization
+
+### Python
+```python
+# Standard library
+import os
+from pathlib import Path
+
+# Third-party
+from fastapi import FastAPI
+import rdflib
+
+# Local
+from .models import SomeModel
+```
+
+### JavaScript
+```javascript
+// React
+import React, { useState } from 'react';
+
+// Third-party
+import axios from 'axios';
+
+// Local
+import { Component } from './Component';
+```
