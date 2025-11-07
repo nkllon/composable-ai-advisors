@@ -275,7 +275,7 @@ The video demonstrates:
 [Add your Cloud Run frontend URL here after deployment]
 
 ### Code Repository
-[Add your public GitHub repository URL here]
+https://github.com/louspringer/ontology-framework (Cloud Run Hackathon branch: `cloud-run-hackathon`)
 
 ### Architecture Diagram
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the complete architecture diagram with Mermaid visualization.
