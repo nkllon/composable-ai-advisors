@@ -118,28 +118,23 @@ The system implements **three bow-tie patterns**:
 ```
 composable-ai-advisors/
 ├── backend/                 # FastAPI backend service
-│   ├── main.py             # Main application file
-│   ├── requirements.txt    # Python dependencies
-│   ├── Dockerfile          # Backend container definition
-│   └── service.yaml        # Cloud Run service config
 ├── frontend/               # React frontend service
-│   ├── src/               # React source code
-│   ├── public/            # Static files
-│   ├── package.json       # Node dependencies
-│   ├── Dockerfile         # Frontend container definition
-│   └── nginx.conf         # Nginx configuration
-├── docs/                  # Documentation and PoD files
-│   └── pod/              # Plan of Day examples
-├── .cursor/               # Cursor IDE configuration
-│   ├── rules/            # Rule sets for AI guidance
-│   └── context/          # Project context files
-├── .mcp/                  # MCP configuration (to be added)
-│   └── README.md          # MCP setup notes
-├── *.ttl                  # RDF/Turtle ontology files
-├── agents.md              # AI agent guidance
-├── .cursorrules           # Main Cursor rules
+├── docs/                   # Documentation
+│   ├── pod/               # Plans of Day examples
+│   ├── architecture/      # Architecture diagrams
+│   └── archive/           # Historical/hackathon docs
+├── scripts/                # Build and deployment scripts
+├── *.ttl                   # RDF/Turtle ontology files (root)
+├── agents.md               # AI agent guidance
+├── ARCHITECTURE.md         # Architecture documentation
+├── DEPLOYMENT.md           # Deployment guide
 └── README.md              # This file
 ```
+
+**Configuration files** (hidden from view):
+- `.cursor/` - Cursor IDE configuration and rules
+- `.mcp/` - MCP configuration (to be added)
+- `.cursorrules` - Main Cursor rules
 
 ## Getting Started
 
@@ -249,7 +244,7 @@ The orchestrator uses **three bow-tie patterns** (all are present):
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Detailed architecture diagrams and technology stack
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment instructions and configuration
 - **[internal-lingo-cheatsheet.md](./internal-lingo-cheatsheet.md)** - Terminology glossary
-- **[BOOTSTRAP.md](./BOOTSTRAP.md)** - Project bootstrap guide
+- **[docs/BOOTSTRAP.md](./docs/BOOTSTRAP.md)** - Project bootstrap guide
 - **[.cursorrules](./.cursorrules)** - Cursor IDE rules and guidelines
 - **[.cursor/rules/](./.cursor/rules/)** - Modular rule sets (architecture, ontology, MCP, coding standards)
 

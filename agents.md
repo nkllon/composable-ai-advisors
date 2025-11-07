@@ -275,7 +275,7 @@ When implementing features, ask:
 
 ## Getting Help
 
-- **Architecture**: See `ARCHITECTURE.md` and `composable-ai-advisors-architecture.*`
+- **Architecture**: See `ARCHITECTURE.md` and `docs/architecture/composable-ai-advisors-architecture.*`
 - **Terminology**: See `internal-lingo-cheatsheet.md`
 - **Ontology**: See `caa-glossary.ttl` and other `.ttl` files
 - **Deployment**: See `DEPLOYMENT.md`

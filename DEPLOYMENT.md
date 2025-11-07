@@ -47,8 +47,8 @@
 ### Method 1: Automated Script (Recommended)
 
 ```bash
-chmod +x deploy.sh
-./deploy.sh YOUR_PROJECT_ID
+chmod +x scripts/deploy.sh
+./scripts/deploy.sh YOUR_PROJECT_ID
 ```
 
 This script will:
@@ -64,7 +64,7 @@ This script will:
 
 ```bash
 # From project root
-gcloud builds submit --config=cloudbuild-backend.yaml .
+gcloud builds submit --config=scripts/cloudbuild-backend.yaml .
 
 # Get the backend URL
 BACKEND_URL=$(gcloud run services describe ontology-backend \
@@ -77,12 +77,12 @@ echo "Backend URL: $BACKEND_URL"
 
 #### Step 2: Update Frontend Config
 
-Edit `cloudbuild-frontend.yaml` and update the `_BACKEND_URL` substitution with your actual backend URL.
+Edit `scripts/cloudbuild-frontend.yaml` and update the `_BACKEND_URL` substitution with your actual backend URL.
 
 #### Step 3: Deploy Frontend
 
 ```bash
-gcloud builds submit --config=cloudbuild-frontend.yaml \
+gcloud builds submit --config=scripts/cloudbuild-frontend.yaml \
   --substitutions=_BACKEND_URL=$BACKEND_URL .
 ```
 
