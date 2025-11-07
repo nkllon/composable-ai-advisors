@@ -163,7 +163,7 @@ function App() {
                 <div className="generate-section">
                   <textarea
                     className="prompt-input"
-                    placeholder="Describe what you want to plan for today. For example: 'I need to work on the Cloud Run hackathon submission, review infrastructure logs, and validate the deployment.'"
+                    placeholder="Describe what you want to plan for today. For example: 'I need to review infrastructure logs, validate the deployment, and coordinate with domain models.'"
                     value={generatePrompt}
                     onChange={(e) => setGeneratePrompt(e.target.value)}
                     rows={6}
