@@ -282,7 +282,7 @@ When implementing features, ask:
 
 ## Getting Help
 
-- **Architecture**: See `ARCHITECTURE.md` and `docs/architecture/composable-ai-advisors-architecture.*`
+- **Architecture**: See `ARCHITECTURE.md`, `docs/architecture/composable-ai-advisors-architecture.*`, and `docs/architecture/modular-ai-framework-diagram.md`
 - **Terminology**: See `internal-lingo-cheatsheet.md`
 - **Ontology**: See `caa-glossary.ttl` and other `.ttl` files
 - **Deployment**: See `DEPLOYMENT.md`
