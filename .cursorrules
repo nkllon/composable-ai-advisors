@@ -4,7 +4,7 @@
 
 This is the **Composable AI Advisors** project, a multi-agent mesh architecture system that uses:
 - **Orchestration**: General-purpose LLM constrained by models (bow-tie pattern) that decomposes tasks and coordinates specialists
-- **Domain Models**: Specialist reasoning services exposing tools + rule packs
+- **Domain Models**: Static, machine-readable model descriptions (Turtle/JSON/Markdown) that LLMs use to assume stakeholder positions
 - **MCP (Model Context Protocol)**: Protocol for secure context exchange, provenance, and audit
 - **Spores**: Portable context/prompt bundles for multi-agent continuity
 - **RDF/Turtle Ontologies**: Semantic web standards for structured data

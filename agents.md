@@ -42,9 +42,12 @@
 ### 1. Multi-Agent Mesh
 - **Not a monolithic LLM**: System uses multiple specialized reasoning services
 - **Orchestration**: General-purpose LLM constrained by models (bow-tie pattern) decomposes tasks and routes to specialists
-- **Service Mesh**: Each domain model runs as independent service (MaaS pattern)
-- **Domain Models**: Abstract/arbitrary - conceptual specialist reasoning services, not specific implementations
-- **Domain Model LLMs**: Each domain model's LLM follows a bow-tie pattern (general-purpose/for-purpose LLM → constrained by models → domain-specific behavior)
+- **Service Mesh**: Services use domain models to provide independent domain-specific capabilities (MaaS pattern)
+- **Domain Models**: Static, machine-readable model descriptions of a domain (Turtle, JSON, or Markdown format)
+  - Used by LLMs to assume the position of a stakeholder for that domain
+  - Must be machine-readable since an LLM needs to read it
+  - Format preference: Turtle > JSON > Markdown (Markdown is least preferred)
+- **Domain Model LLMs**: Each domain model's LLM follows a bow-tie pattern (general-purpose/for-purpose LLM → constrained by domain models → domain-specific behavior)
 - **Current State**: Multi-genetic LLM advisory capabilities are working
 
 ### 2. MCP (Model Context Protocol)
@@ -174,11 +177,15 @@ The system uses **three bow-tie patterns** (all are present):
 
 ### Adding a New Domain Model
 
-1. Define domain ontology in RDF/Turtle
-2. Create service API (FastAPI endpoint)
-3. Implement tool adapters for domain-specific tools
-4. Register in MCP configuration
-5. Update architecture documentation
+1. Create domain model description file (preferably RDF/Turtle, or JSON/Markdown)
+   - Model must be machine-readable
+   - Describes the domain and stakeholder perspective
+   - Used by LLM to assume stakeholder position for that domain
+2. Define domain ontology in RDF/Turtle (if using Turtle format)
+3. Create service API (FastAPI endpoint) that uses the domain model
+4. Implement tool adapters for domain-specific tools
+5. Register in MCP configuration
+6. Update architecture documentation
 
 ### Creating a Spore
 

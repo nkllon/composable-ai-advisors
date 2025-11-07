@@ -63,10 +63,12 @@
 - Trace/audit layer
 
 ### Domain Models
-- **Abstract/Arbitrary**: Domain models are conceptual, not specific implementations
-- Examples: Domain Model A, B (Investments), C (Cognition) are placeholders
-- Domain models represent abstract specialist reasoning services
-- Actual implementations depend on product requirements
+- **Static Model Descriptions**: Domain models are static, machine-readable files (not services)
+- **Format**: Turtle (preferred), JSON, or Markdown (least preferred)
+- **Purpose**: Model description of a domain that an LLM uses to assume the position of a stakeholder for that domain
+- **Machine-Readable**: Must be machine-readable since an LLM needs to read it
+- Examples: Domain Model A, B (Investments), C (Cognition) are conceptual examples
+- Services use domain models to provide domain-specific reasoning capabilities
 
 ### Client Applications
 - **Arbitrary Examples**: Mapper, Legal DocBot, OSINT, Guidance, Audit

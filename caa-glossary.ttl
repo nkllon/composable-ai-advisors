@@ -20,7 +20,7 @@ caa:Orchestrator a owl:Class ;
 
 caa:DomainModel a owl:Class ;
   rdfs:label "Domain Model" ;
-  rdfs:comment "A specialist reasoning service exposing models, tools, and rule packs for a domain." .
+  rdfs:comment "A static, machine-readable model description of a domain (Turtle, JSON, or Markdown format). Used by LLMs to assume the position of a stakeholder for that domain. Must be machine-readable since an LLM needs to read it." .
 
 caa:ToolAdapter a owl:Class ;
   rdfs:label "Tool Adapter" ;

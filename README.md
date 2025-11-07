@@ -7,7 +7,7 @@ A multi-agent mesh architecture system that decomposes general AI into a service
 **Composable AI Advisors** uses a multi-agent mesh pattern where:
 
 - An **orchestrator** (general-purpose LLM constrained by models) decomposes tasks and coordinates specialists
-- **Domain models** expose tools and rule packs as independent services (MaaS)
+- **Domain models** are static, machine-readable model descriptions (Turtle/JSON/Markdown) that LLMs use to assume stakeholder positions
 - **MCP Context & Trace layer** provides secure context exchange, provenance, and audit
 - **Client applications** consume orchestrated outputs
 
@@ -55,8 +55,11 @@ The system implements **three bow-tie patterns**:
 ### Multi-Agent Mesh
 - **Not a monolithic LLM**: System uses multiple specialized reasoning services
 - **Orchestration**: General-purpose LLM constrained by models (bow-tie pattern) decomposes tasks and routes to specialists
-- **Service Mesh**: Each domain model runs as independent service (MaaS pattern)
-- **Domain Models**: Abstract/arbitrary - conceptual specialist reasoning services, not specific implementations
+- **Service Mesh**: Services use domain models to provide independent domain-specific capabilities (MaaS pattern)
+- **Domain Models**: Static, machine-readable model descriptions of a domain (Turtle, JSON, or Markdown format)
+  - Used by LLMs to assume the position of a stakeholder for that domain
+  - Must be machine-readable since an LLM needs to read it
+  - Format preference: Turtle > JSON > Markdown (Markdown is least preferred)
 - **Current State**: Multi-genetic LLM advisory capabilities are working
 
 ### MCP (Model Context Protocol)
