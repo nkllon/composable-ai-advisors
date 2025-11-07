@@ -275,8 +275,7 @@ The video demonstrates:
 [Add your Cloud Run frontend URL here after deployment]
 
 ### Code Repository
-**Primary**: https://github.com/nkllon/composable-ai-advisors (private)  
-**Mirror**: https://github.com/louspringer/ontology-framework (Cloud Run Hackathon branch: `cloud-run-hackathon`)
+https://github.com/nkllon/composable-ai-advisors (private)
 
 ### Architecture Diagram
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for the complete architecture diagram with Mermaid visualization.
