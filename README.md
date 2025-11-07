@@ -19,6 +19,10 @@ The system implements **three bow-tie patterns**:
 
 ## Core Architecture
 
+![Modular AI Framework](docs/architecture/modular-ai-framework-diagram.png)
+
+*From Monolithic LLMs to Modular AI - A Modern Framework for Composable AI Systems*
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │              Orchestration                            │
