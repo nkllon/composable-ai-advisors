@@ -1,0 +1,24 @@
+@prefix plan: <https://ontology.beastmost.com/plan#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Guidance Registry for Plans of Day
+# This file tracks all registered PlanOfDay instances
+
+# Base ontology imports
+@base <https://ontology.beastmost.com/> .
+
+# Register PoD 2025-11-05
+<https://ontology.beastmost.com/pod/2025/PoD_2025-11-05>
+    a plan:PlanOfDay ;
+    plan:registeredIn <https://ontology.beastmost.com/guidance.ttl> ;
+    plan:filePath "docs/pod/2025/PoD_2025-11-05.ttl" ;
+    plan:readmePath "docs/pod/2025/README_PoD_2025-11-05.md" .
+
+# Guidance registry metadata
+<https://ontology.beastmost.com/guidance.ttl>
+    a plan:GuidanceRegistry ;
+    rdfs:label "Guidance Registry" ;
+    plan:lastUpdated "2025-11-05T00:00:00Z"^^xsd:dateTime ;
+    plan:registryVersion "1.0.0" .

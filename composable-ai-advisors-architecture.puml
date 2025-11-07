@@ -1,0 +1,28 @@
+@startuml
+skinparam shadowing false
+skinparam dpi 150
+skinparam rectangle {
+  RoundCorner 12
+  FontSize 14
+}
+title Composable AI Advisors – Reference Architecture
+
+rectangle "Orchestration LLM\n(General Reasoner)" as Orchestrator
+
+rectangle "Domain Model A\n(Tools + Rules)" as A
+rectangle "Domain Model B\n(Investments, etc. + Rules)" as B
+rectangle "Domain Model C\n(Cognition + Rules)" as C
+
+rectangle "MCP Context & Trace Layer" as MCP
+rectangle "Clients / Viewers\nMapper • Legal DocBot • OSINT • Guidance • Audit" as Clients
+
+Orchestrator --> A
+Orchestrator --> B
+Orchestrator --> C
+
+A --> MCP
+B --> MCP
+C --> MCP
+
+MCP --> Clients
+@enduml

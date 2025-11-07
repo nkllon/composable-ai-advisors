@@ -1,0 +1,15 @@
+digraph CAA {
+  rankdir=TB;
+  node [shape=box, style=rounded, fontsize=12];
+
+  Orchestrator [label="Orchestration LLM\n(General Reasoner)"];
+  A [label="Domain Model A\n(Tools + Rules)"];
+  B [label="Domain Model B\n(Investments, etc. + Rules)"];
+  C [label="Domain Model C\n(Cognition + Rules)"];
+  MCP [label="MCP Context & Trace Layer"];
+  Clients [label="Clients / Viewers\nMapper • Legal DocBot • OSINT • Guidance • Audit"];
+
+  Orchestrator -> {A B C};
+  {A B C} -> MCP;
+  MCP -> Clients;
+}

@@ -1,0 +1,46 @@
+steps:
+  # Build the React app
+  - name: 'node:18'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd frontend
+        npm install
+        REACT_APP_API_URL=${_BACKEND_URL} npm run build
+  
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/ontology-frontend:latest', '-f', 'frontend/Dockerfile', 'frontend']
+  
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/ontology-frontend:latest']
+  
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ontology-frontend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/ontology-frontend:latest'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '80'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+
+substitutions:
+  _BACKEND_URL: 'https://ontology-backend-XXXXX-uc.a.run.app'  # Update with actual backend URL after backend deployment
+
+images:
+  - 'gcr.io/$PROJECT_ID/ontology-frontend:latest'
+

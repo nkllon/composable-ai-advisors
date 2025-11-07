@@ -1,0 +1,29 @@
+@prefix spore: <https://ontology.beastmost.com/spore#> .
+@prefix plan: <https://ontology.beastmost.com/plan#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Spore Registry for Multi-Agent Continuity
+# Tracks spore propagation and linking to milestones
+
+# Base ontology imports
+@base <https://ontology.beastmost.com/> .
+
+# Spore for PoD 2025-11-05
+<https://ontology.beastmost.com/spore/2025/PoD_2025-11-05>
+    a spore:Spore ;
+    rdfs:label "Spore for PoD 2025-11-05" ;
+    spore:linksTo <https://ontology.beastmost.com/milestone/2025-11-11> ;
+    spore:derivedFrom <https://ontology.beastmost.com/pod/2025/PoD_2025-11-05> ;
+    prov:wasDerivedFrom <https://ontology.beastmost.com/pod/2025/PoD_2025-11-05> ;
+    spore:createdAt "2025-11-05T00:00:00Z"^^xsd:dateTime ;
+    spore:status "active" .
+
+# Spore registry metadata
+<https://ontology.beastmost.com/spore_registry.ttl>
+    a spore:SporeRegistry ;
+    rdfs:label "Spore Registry" ;
+    spore:lastUpdated "2025-11-05T00:00:00Z"^^xsd:dateTime ;
+    spore:registryVersion "1.0.0" .

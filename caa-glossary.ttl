@@ -1,0 +1,133 @@
+@prefix caa: <http://nkllon.com/ontology/caa#> .
+@prefix meta: <http://nkllon.com/ontology/meta#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+caa: a owl:Ontology ;
+  dct:title "Composable AI Advisors (CAA) Ontology" ;
+  dct:creator "Lou" ;
+  dct:description "Glossary + scaffold aligning multi‑agent mesh, MCP, and spore concepts." ;
+  dct:license "CC-BY-4.0" .
+
+### Core classes
+caa:Orchestrator a owl:Class ;
+  rdfs:label "Orchestration LLM" ;
+  rdfs:comment "General reasoner that decomposes tasks, routes to domain engines, and synthesizes results." .
+
+caa:DomainModel a owl:Class ;
+  rdfs:label "Domain Model" ;
+  rdfs:comment "A specialist reasoning service exposing models, tools, and rule packs for a domain." .
+
+caa:ToolAdapter a owl:Class ;
+  rdfs:label "Tool Adapter" ;
+  rdfs:comment "Adapter that connects a reasoning agent to concrete tools/APIs." .
+
+caa:RuleSet a owl:Class ;
+  rdfs:label "Rule Set" ;
+  rdfs:comment "Declarative rules (validation, policy, routing, safety) applied by an agent." .
+
+caa:MCPContext a owl:Class ;
+  rdfs:label "MCP Context & Trace" ;
+  rdfs:comment "Model Context Protocol layer governing secure context exchange, provenance, and audit." .
+
+caa:ClientApp a owl:Class ;
+  rdfs:label "Client Application" ;
+  rdfs:comment "Downstream consumer such as Viewer, Mapper, Legal DocBot, OSINT, Guidance, or Audit." .
+
+caa:Spore a owl:Class ;
+  rdfs:label "Spore" ;
+  rdfs:comment "Portable context bundle." .
+
+caa:ContextSpore a owl:Class ;
+  rdfs:subClassOf caa:Spore ;
+  rdfs:label "Context Spore" ;
+  rdfs:comment "Spore carrying domain context, data pointers, and policies." .
+
+caa:PromptSpore a owl:Class ;
+  rdfs:subClassOf caa:Spore ;
+  rdfs:label "Prompt Spore" ;
+  rdfs:comment "Spore carrying prompt/program templates and routing hints." .
+
+### Properties
+caa:orchestrates a owl:ObjectProperty ;
+  rdfs:domain caa:Orchestrator ;
+  rdfs:range  caa:DomainModel ;
+  rdfs:label  "orchestrates" ;
+  rdfs:comment "Orchestrator coordinates the given domain model." .
+
+caa:usesTool a owl:ObjectProperty ;
+  rdfs:domain caa:DomainModel ;
+  rdfs:range  caa:ToolAdapter ;
+  rdfs:label  "uses tool" .
+
+caa:appliesRules a owl:ObjectProperty ;
+  rdfs:domain caa:DomainModel ;
+  rdfs:range  caa:RuleSet ;
+  rdfs:label  "applies rules" .
+
+caa:exchangesContextWith a owl:ObjectProperty ;
+  rdfs:domain caa:DomainModel ;
+  rdfs:range  caa:MCPContext ;
+  rdfs:label  "exchanges context with" .
+
+caa:producesFor a owl:ObjectProperty ;
+  rdfs:domain caa:MCPContext ;
+  rdfs:range  caa:ClientApp ;
+  rdfs:label  "produces for" .
+
+caa:hasSpore a owl:ObjectProperty ;
+  rdfs:domain owl:Thing ;
+  rdfs:range  caa:Spore ;
+  rdfs:label  "has spore" .
+
+### Minimal SHACL shapes
+caa:DomainModelShape a sh:NodeShape ;
+  sh:targetClass caa:DomainModel ;
+  sh:property [
+    sh:path caa:usesTool ;
+    sh:minCount 0 ;
+    sh:maxCount 10 ;
+  ] ;
+  sh:property [
+    sh:path caa:appliesRules ;
+    sh:minCount 0 ;
+    sh:maxCount 10 ;
+  ] ;
+  sh:property [
+    sh:path caa:exchangesContextWith ;
+    sh:minCount 1 ;
+  ] .
+
+caa:OrchestratorShape a sh:NodeShape ;
+  sh:targetClass caa:Orchestrator ;
+  sh:property [
+    sh:path caa:orchestrates ;
+    sh:minCount 1 ;
+  ] .
+
+### Example instance sketch (non-normative)
+caa:bfg9k a caa:Orchestrator ;
+  rdfs:label "BFG9K Orchestrator" ;
+  caa:orchestrates caa:domainA, caa:domainB, caa:domainC .
+
+caa:domainA a caa:DomainModel ;
+  rdfs:label "Domain A (Tools + Rules)" ;
+  caa:exchangesContextWith caa:mcp .
+
+caa:domainB a caa:DomainModel ;
+  rdfs:label "Domain B (Investments etc. + Rules)" ;
+  caa:exchangesContextWith caa:mcp .
+
+caa:domainC a caa:DomainModel ;
+  rdfs:label "Domain C (Cognition + Rules)" ;
+  caa:exchangesContextWith caa:mcp .
+
+caa:mcp a caa:MCPContext ;
+  caa:producesFor caa:clients .
+
+caa:clients a caa:ClientApp ;
+  rdfs:label "Viewer, Mapper, Legal DocBot, OSINT, Guidance, Audit" .
