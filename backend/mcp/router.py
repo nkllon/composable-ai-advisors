@@ -9,22 +9,23 @@ _manager = MCPConfigManager()
 
 async def _ensure_loaded() -> None:
 	"""Ensure MCP config is loaded and domain models preloaded at first access."""
-	if not _manager.config.servers:
-		try:
+	try:
+		if not _manager.config.servers:
 			await _manager.load()
+		# Ensure domain models are loaded at least once
+		if not _manager.framework.registry.list_all():
 			await _manager.preload_domain_models()
-			# As a fallback, if no models are registered but a sample exists, load it explicitly
+			# As a fallback, if still empty and a sample exists, load it explicitly
 			if not _manager.framework.registry.list_all():
-				from pathlib import Path
 				candidate = _manager.framework.loader.base_dir / "sample.ttl"
 				if candidate.exists():
 					try:
 						await _manager.framework.load_domain_model("sample.ttl")
 					except Exception:
 						pass
-		except Exception:
-			# Best-effort; endpoints remain functional with empty config
-			pass
+	except Exception:
+		# Best-effort; endpoints remain functional with empty config
+		pass
 
 @router.on_event("startup")
 async def _startup() -> None:
