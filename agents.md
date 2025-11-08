@@ -282,4 +282,8 @@ When implementing features, ask:
 - Current README.md may not reflect actual project state
 - Always prioritize modularity and composability
 - Maintain semantic web standards (RDF/Turtle) for data
-
+ 
+## Agent assignment guidance
+ 
+- PR workflow ownership: Assign pull request creation, updates, rebases, and merges to GPT and human maintainers. Avoid assigning PR workflows to Codex.
+- Human agents: Prefer human review for conflict resolution and branch hygiene tasks; escalate when automation confidence is low.
