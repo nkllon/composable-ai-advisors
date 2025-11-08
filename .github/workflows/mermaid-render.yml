@@ -23,10 +23,10 @@ jobs:
         run: npm install -g @mermaid-js/mermaid-cli
 
       - name: Render README architecture diagram
-        run: mmdc -i tools/mermaid-check/README-architecture.mmd -o tools/mermaid-check/README-architecture.svg
+        run: mmdc -p tools/mermaid-check/puppeteer-config.json -i tools/mermaid-check/README-architecture.mmd -o tools/mermaid-check/README-architecture.svg
 
       - name: Render README project structure diagram
-        run: mmdc -i tools/mermaid-check/README-structure.mmd -o tools/mermaid-check/README-structure.svg
+        run: mmdc -p tools/mermaid-check/puppeteer-config.json -i tools/mermaid-check/README-structure.mmd -o tools/mermaid-check/README-structure.svg
 
       - name: Upload rendered SVGs
         uses: actions/upload-artifact@v4
