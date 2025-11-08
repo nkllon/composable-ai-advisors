@@ -396,10 +396,10 @@ class ModelValidator:
 
 **Validation Rules**:
 - **Required fields**: domain_id, domain_name, description, version (Requirements: 4.1, 4.2)
-- **domain_id**: Lowercase alphanumeric with hyphens
-- **domain_name**: Non-empty string (Requirement: 4.1)
-- **description**: Non-empty string (Requirement: 4.2)
-- **version**: Semantic versioning format (e.g., 1.0.0) (Requirement: 9.1)
+- **domain_id**: Lowercase alphanumeric with hyphens (pattern: `^[a-z0-9-]+$`), serves as unique identifier for the domain model (Requirement: 5.1)
+- **domain_name**: Non-empty string with minimum length of 1 character (Requirement: 4.1)
+- **description**: Non-empty string with minimum length of 1 character (Requirement: 4.2)
+- **version**: Semantic versioning format (e.g., 1.0.0) matching pattern `^\d+\.\d+\.\d+$` (Requirement: 9.1)
 - **version compatibility**: Must be compatible with framework version (Requirement: 9.4)
 - **Turtle**: Valid RDF triples, no parsing errors (Requirement: 4.3)
 - **JSON**: Conforms to JSON schema (Requirement: 4.4)
@@ -477,15 +477,15 @@ class ModelRegistry:
 ```
 
 **Registry Features**:
-- Index models by domain_id (Requirement: 5.1)
-- Store metadata including file path, format, load timestamp, version (Requirement: 5.2)
-- Track version history per domain (Requirement: 9.2)
-- Support version-specific retrieval (Requirement: 9.3)
-- List all registered models (Requirement: 5.3)
-- Retrieve specific model by identifier (Requirement: 5.4)
-- Full-text search across name, description, keywords (Requirement: 5.5)
-- Retrieve all versions for a domain (Requirement: 9.5)
-- Thread-safe operations
+- Index models by domain_id (unique DomainIdentifier) (Requirement: 5.1)
+- Store metadata including file path, format type, load timestamp, and version number (Requirement: 5.2)
+- Track version history per domain in version_history dictionary (Requirement: 9.2)
+- Support version-specific retrieval using version number parameter (Requirement: 9.3)
+- List all registered models returning metadata list (Requirement: 5.3)
+- Retrieve specific model by DomainIdentifier (Requirement: 5.4)
+- Full-text search across domain name text and description text using search criteria (Requirement: 5.5)
+- Retrieve all available version numbers for a specific domain model (Requirement: 9.5)
+- Thread-safe operations for concurrent access
 
 
 ### 6. Model Cache
@@ -554,14 +554,14 @@ class ModelCache:
 ```
 
 **Caching Strategy**:
-- Store parsed models in memory after first successful load (Requirement: 6.1)
-- Use domain_id as unique cache key (Requirement: 6.2)
-- LRU-style cache with TTL
+- Store parsed models in memory after first successful load operation completes (Requirement: 6.1)
+- Use domain_id (DomainIdentifier) as unique cache key for storage and retrieval operations (Requirement: 6.2)
+- LRU-style cache with configurable time-to-live duration
 - Default TTL: 300 seconds (5 minutes) (Requirement: 6.4)
-- Thread-safe with locks
-- Track hit/miss statistics (Requirement: 6.5)
+- Thread-safe with locks for concurrent access
+- Track and maintain cache hit count and cache miss count as performance statistics (Requirement: 6.5)
 - Periodic cleanup of expired entries
-- Invalidation on reload (Requirement: 6.3, 7.3)
+- Provide invalidation method to remove cached entries when domain model file is modified (Requirements: 6.3, 7.3)
 
 ### 7. Domain Model Framework (Main Interface)
 
@@ -808,34 +808,34 @@ As a tool execution specialist, I focus on...
 ### Error Categories
 
 1. **File Not Found**
-   - File path doesn't exist
-   - **Handling**: Raise `FileNotFoundError` with path
+   - File path doesn't exist at specified location
+   - **Handling**: Raise `FileNotFoundError` with error message containing the attempted file path
    - **Requirements**: 2.3
 
 2. **Unsupported Format**
    - File extension not .ttl, .json, or .md
-   - **Handling**: Raise `ValueError` with supported formats list
+   - **Handling**: Raise `ValueError` with error message listing Turtle, JSON, and Markdown as supported formats
    - **Requirements**: 1.5
 
 3. **Parse Error**
    - Invalid Turtle/JSON/Markdown syntax
-   - **Handling**: Raise `ParseError` with file path, format, and details
+   - **Handling**: Raise `ParseError` with structured error containing file path, detected format, and specific error details
    - **Requirements**: 3.5
 
 4. **Validation Error**
-   - Missing required fields (domain_name, description)
-   - Invalid field values
-   - **Handling**: Return `ValidationResult` with field names and error messages
+   - Missing required fields (domain_id, domain_name, description, version)
+   - Invalid field values or format violations
+   - **Handling**: Return `ValidationResult` containing field names and specific error messages
    - **Requirements**: 4.1, 4.2, 4.5
 
 5. **Version Incompatibility Error**
-   - Domain model version incompatible with framework
-   - **Handling**: Raise `VersionIncompatibilityError` with version details
+   - Domain model version incompatible with framework version
+   - **Handling**: Raise `VersionIncompatibilityError` with error message containing domain model version and framework version details
    - **Requirements**: 9.4
 
 6. **Cache Error**
-   - Cache corruption
-   - **Handling**: Log error, invalidate cache, reload
+   - Cache corruption or inconsistency
+   - **Handling**: Log error, invalidate cache, reload from source
 
 ### Error Response Format
 
@@ -927,16 +927,16 @@ class VersionIncompatibilityError(DomainModelError):
 The framework tracks the following metrics for monitoring and troubleshooting:
 
 **Load Metrics** (Requirement: 10.4):
-- `domain_model_load_count`: Total number of successful domain model loads
-- `parse_error_count`: Total number of parsing errors
-- `validation_error_count`: Total number of validation errors
+- `domain_model_load_count`: Total number of successful domain model load operations
+- `parse_error_count`: Total number of parsing errors encountered
+- `validation_error_count`: Total number of validation errors encountered
 
 **Cache Metrics** (Requirement: 10.5):
-- `cache_hit_rate`: Percentage of cache hits vs total requests
-- `cache_size`: Current number of models in cache
+- `cache_hit_rate`: Cache hit rate percentage (hits / total requests)
+- `cache_size`: Current cache size count (number of models in cache)
 
 **Registry Metrics**:
-- `registered_models_count`: Total number of registered domain models
+- `registered_models_count`: Total number of registered domain models in the registry
 
 ### Logging Strategy
 
@@ -944,7 +944,119 @@ The framework logs all significant operations (Requirements: 10.1, 10.2, 10.3):
 
 **Load Operations** (Requirement: 10.1):
 - Log level: INFO
-- Message: "Loading domain model from {file_path}"
+- Message: "Loading domain model from {file_path}" / "Successfully loaded domain model {domain_id}"
+- Include: file path and completion status
+
+**Parse Errors** (Requirement: 10.2):
+- Log level: ERROR
+- Message: "Parse error for {file_path}"
+- Include: file path and specific error details
+
+**Validation Errors** (Requirement: 10.3):
+- Log level: ERROR
+- Message: "Validation error for {domain_id}"
+- Include: DomainIdentifier and specific error details
+
+**Cache Operations**:
+- Log level: DEBUG
+- Message: "Cache hit for {domain_id}" / "Cache miss for {domain_id}"
+- Include: domain_id
+
+**Reload Operations** (Requirements: 7.1, 7.2):
+- Log level: INFO
+- Message: "Reloading domain model {domain_id}" / "Reloading all domain models"
+- Include: domain_id (if specific), completion status
+
+### Metrics Export
+
+The `get_metrics()` method returns a dictionary with all operational and performance metrics (Requirements: 10.4, 10.5):
+
+```python
+{
+    "domain_model_load_count": 42,      # Total successful loads
+    "parse_error_count": 2,              # Total parse errors
+    "validation_error_count": 1,         # Total validation errors
+    "cache_hit_rate": 0.85,              # Cache hit rate (85%)
+    "cache_size": 15,                    # Current models in cache
+    "registered_models_count": 20        # Total registered models
+}
+```
+
+## Performance Considerations
+
+### Caching Strategy
+- Cache parsed models in memory after first successful load
+- Default TTL: 300 seconds (configurable)
+- Invalidate on reload to ensure consistency
+- Track hit rate for monitoring cache effectiveness
+
+### Async Operations
+- Use `asyncio` for file I/O operations (Requirement: 2.5)
+- Concurrent loading of multiple domain models
+- Non-blocking operations to improve throughput
+
+### Memory Management
+- Limit cache size (configurable maximum entries)
+- Periodic cleanup of expired entries
+- Weak references for large RDF graphs to allow garbage collection
+
+## Security Considerations
+
+### File Access
+- Restrict file loading to configured base directory
+- Validate and sanitize file paths (prevent directory traversal attacks)
+- Read-only access to domain model files
+- Resolve both absolute and relative paths safely (Requirement: 2.2)
+
+### Content Validation
+- Validate all inputs before processing
+- Sanitize file paths and domain identifiers
+- Limit file size to prevent resource exhaustion (default: 10MB)
+- Validate UTF-8 encoding (Requirement: 2.4)
+
+## Deployment Strategy
+
+### Phase 1: Standalone Implementation
+- Implement framework as independent module in `backend/domain_model/`
+- Unit tests with comprehensive fixtures
+- No external service dependencies
+
+### Phase 2: Integration with Backend
+- Add to FastAPI backend application
+- Expose via API endpoints (optional for external access)
+- Integration tests with backend services
+
+### Phase 3: MCP Integration
+- Use in MCP configuration manager for domain model registration
+- Use in reasoning services for domain-specific capabilities
+- End-to-end tests with orchestrator and domain models
+
+## Future Enhancements
+
+### Remote Loading
+- Load domain models from URLs (HTTP/HTTPS)
+- Support for Git repositories (clone and load)
+- Version control integration for automatic updates
+
+### Hot Reload
+- Watch file system for changes using file system events
+- Auto-reload on modification without manual trigger
+- Notify dependent services of model updates
+
+### Schema Evolution
+- Support schema migrations for domain model format changes
+- Backward compatibility with older versions
+- Version negotiation between framework and models
+
+### Advanced Validation
+- SHACL validation for Turtle format (semantic validation)
+- Custom validation rules per domain
+- Semantic validation beyond structural checks
+
+### Performance Optimization
+- Lazy loading of domain model content
+- Streaming parser for large files
+- Distributed caching for multi-instance deploymentsading domain model from {file_path}"
 - Include: file_path, completion status
 
 **Parse Errors** (Requirement: 10.2):
