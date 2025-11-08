@@ -52,7 +52,7 @@ jobs:
         run: |
           if [ -s changed_md.txt ]; then
             while IFS= read -r f; do
-              markdownlint "$f"
+              markdownlint -c .markdownlint.yml "$f"
             done < changed_md.txt
           else
             echo "No changed Markdown files."
