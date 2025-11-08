@@ -28,6 +28,51 @@ Relates to: CI-REQ-010…CI-REQ-014
    - Use uv/uvx to match CI runners and ensure parity.
    - Keep `markdown` target using `.markdownlint.yml` to avoid rule drift.
 
+6. Concurrency and Cancellation (CI-REQ-017)
+   - Add `concurrency` to workflows:
+     ```
+     concurrency:
+       group: ${{ github.workflow }}-${{ github.ref }}
+       cancel-in-progress: true
+     ```
+
+7. Actions Pinning (CI-REQ-018)
+   - Pin all `uses: actions/...@<SHA>`; document policy for updating SHAs regularly.
+
+8. Caching (CI-REQ-019)
+   - Add actions/cache for uv (wheel/cache directories) keyed by OS + Python + lockfile hashes.
+   - Consider caching `.pytest_cache` for marginal gains.
+
+9. Coverage (CI-REQ-020)
+   - Enable pytest-cov, generate `coverage.xml`, enforce threshold via `--cov-fail-under=70`.
+   - Optionally upload to codecov (if configured) or store artifact.
+
+10. Security Scans and SBOM (CI-REQ-021)
+   - Add Trivy (fs/image) scanning steps; fail on HIGH/CRITICAL.
+   - Generate SBOM via Syft and upload as artifact.
+
+11. Secret Scanning (CI-REQ-022)
+   - Run gitleaks against PR diffs; fail on findings (with allowlist file if needed).
+
+12. Token Permissions (CI-REQ-023)
+   - Add job-level `permissions` blocks (e.g., `contents: read`); elevate only as needed.
+
+13. PR Hygiene (CI-REQ-024)
+   - Add `.github/labeler.yml` and a workflow to auto-apply labels.
+   - Optionally require at least one label before merge via branch protection rules.
+
+14. Dependency Automation (CI-REQ-025)
+   - Add `.github/dependabot.yml` or Renovate configuration for Actions and Python.
+
+15. Post-Deploy Smoke (CI-REQ-026)
+   - Define smoke scripts to hit `/health` and core endpoints; fail job on non-2xx.
+
+16. Environment Policies (CI-REQ-027)
+   - Use protected environments with required reviewers for prod in GitHub, or Cloud Build manual approvals for promotions.
+
+17. Provenance and Signing (CI-REQ-028)
+   - Configure GitHub OIDC to GCP and cosign to sign images; document verification steps for Cloud Run.
+
 # Design Document
 
 ## Overview
