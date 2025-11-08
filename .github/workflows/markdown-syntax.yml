@@ -34,7 +34,12 @@ jobs:
           else
             BEFORE="${{ github.event.before }}"
             AFTER="${{ github.sha }}"
-            CHANGED="$(git diff --name-only "${BEFORE}" "${AFTER}" -- '**/*.md')"
+            # Handle initial branch commit where BEFORE may be all zeros or empty
+            if [[ -z "${BEFORE}" || "${BEFORE}" =~ ^0{40}$ ]]; then
+              CHANGED="$(git diff-tree --no-commit-id --name-only -r "${AFTER}" -- '**/*.md' || true)"
+            else
+              CHANGED="$(git diff --name-only "${BEFORE}" "${AFTER}" -- '**/*.md')"
+            fi
           fi
           echo "${CHANGED}" | sed '/^\s*$/d' > changed_md.txt
           # Exclude command templates and internal cursor command files
