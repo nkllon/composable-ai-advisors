@@ -15,9 +15,11 @@
 - Path filters for CI efficiency → CI-REQ-013
 - Dev dependency isolation → CI-REQ-014
 - Local pre-commit markdown checks → CI-REQ-015
+- Canonical Makefile targets → CI-REQ-016
 
 ## Artifacts
 - `.pre-commit-config.yaml` → CI-REQ-015
 - `docs/tooling/pre-commit.md` → CI-REQ-015
+- `Makefile` → CI-REQ-016
 
 

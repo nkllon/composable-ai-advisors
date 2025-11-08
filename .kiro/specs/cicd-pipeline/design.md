@@ -22,6 +22,12 @@ Relates to: CI-REQ-010…CI-REQ-014
    - Document setup in `docs/tooling/pre-commit.md` (install pre-commit, install markdownlint-cli, enable hooks).
    - Ensure CI markdown rules and local hook use the same config to prevent drift.
 
+5. Canonical Makefile
+   - Provide a `Makefile` wrapping common local dev tasks to align with CI:
+     - `setup`, `lint`, `typecheck`, `test`, `markdown`, `pre-commit-install`, `ci`, `run-backend`.
+   - Use uv/uvx to match CI runners and ensure parity.
+   - Keep `markdown` target using `.markdownlint.yml` to avoid rule drift.
+
 # Design Document
 
 ## Overview
