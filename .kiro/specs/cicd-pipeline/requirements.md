@@ -61,6 +61,78 @@ This specification defines the requirements for the Continuous Integration and C
 2. THE `markdown` target SHALL use the same `.markdownlint.yml` as CI.
 3. THE `ci` target SHALL execute lint → typecheck → test → markdown sequentially.
 
+### Requirement 10f — Concurrency and Cancellation (CI-REQ-017)
+
+#### Acceptance Criteria
+1. THE workflows SHALL set a `concurrency` group to prevent duplicate runs on the same ref.
+2. THE workflows SHALL `cancel-in-progress: true` for the same group.
+
+### Requirement 10g — Actions Pinning Policy (CI-REQ-018)
+
+#### Acceptance Criteria
+1. ALL GitHub Actions SHALL be pinned to commit SHAs (not just tags).
+2. THE policy SHALL be documented and enforced for new workflows.
+
+### Requirement 10h — Build/Test Caching (CI-REQ-019)
+
+#### Acceptance Criteria
+1. THE CI jobs SHALL use actions/cache (or uv-native cache) for Python dependency wheels and test caches where applicable.
+2. CACHE keys SHALL include OS, Python version, and lockfile hashes (if present).
+
+### Requirement 10i — Coverage Threshold (CI-REQ-020)
+
+#### Acceptance Criteria
+1. THE test job SHALL collect coverage with pytest-cov and generate coverage.xml.
+2. A minimum coverage threshold (e.g., 70%) SHALL be enforced (job fails under threshold).
+
+### Requirement 10j — Supply Chain and Security Scans (CI-REQ-021)
+
+#### Acceptance Criteria
+1. THE CI SHALL run container/image scans (e.g., Trivy) and fail on high-severity vulnerabilities.
+2. THE CI SHALL generate an SBOM (e.g., Syft) as an artifact.
+
+### Requirement 10k — Secret Scanning (CI-REQ-022)
+
+#### Acceptance Criteria
+1. THE CI SHALL run a secret scanner (e.g., gitleaks) against changes.
+2. THE job SHALL fail on confirmed secret findings.
+
+### Requirement 10l — Token Permissions Hardening (CI-REQ-023)
+
+#### Acceptance Criteria
+1. EACH job SHALL explicitly set least-privilege `permissions` (e.g., contents: read).
+2. Elevations (e.g., contents: write) SHALL be scoped to required jobs only.
+
+### Requirement 10m — PR Hygiene Automation (CI-REQ-024)
+
+#### Acceptance Criteria
+1. THE repository MAY include a labeler and require at least one label before merge.
+2. AUTOMATIC assignment of reviewers/code owners MAY be configured via CODEOWNERS and labeler.
+
+### Requirement 10n — Dependency Automation (CI-REQ-025)
+
+#### Acceptance Criteria
+1. THE repository SHALL enable Dependabot/Renovate for Actions and Python dependencies.
+2. PRs from bots SHALL trigger the same CI checks as human PRs.
+
+### Requirement 10o — Post-Deploy Smoke Tests (CI-REQ-026)
+
+#### Acceptance Criteria
+1. THE pipeline SHALL run smoke tests (health endpoints/basic calls) after deploy.
+2. FAILING smoke tests SHALL mark the job as failed and prevent promotion; rollback may be manual initially.
+
+### Requirement 10p — Environment Policies (CI-REQ-027)
+
+#### Acceptance Criteria
+1. CD stages (dev/stage/prod) SHALL require approvals for protected environments (prod).
+2. PROMOTION gates SHALL be documented (manual approval steps or Cloud Build triggers).
+
+### Requirement 10q — Provenance and Signing (CI-REQ-028)
+
+#### Acceptance Criteria
+1. THE build SHALL produce provenance (SLSA-lite) using GitHub OIDC to GCP where feasible.
+2. IMAGES SHALL be signed (cosign) before deploy; verification policy SHALL be documented.
+
 ### Requirement 1 — Backend Build, Push, and Deploy
 
 **User Story:** As a developer, I want the backend container to be built, pushed, and deployed automatically, so that I can run the API on Cloud Run.

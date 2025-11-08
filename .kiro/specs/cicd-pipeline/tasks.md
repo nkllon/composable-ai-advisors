@@ -60,4 +60,53 @@
 - [x] Ensure markdown target uses `.markdownlint.yml`
 - _Requirements: CI-REQ-016_
 
+9. Concurrency and Cancellation
+- [ ] Add `concurrency` blocks to CI and markdown workflows
+- _Requirements: CI-REQ-017_
+
+10. Actions Pinning
+- [ ] Pin all Actions to commit SHAs and document policy
+- _Requirements: CI-REQ-018_
+
+11. Caching
+- [ ] Add actions/cache for uv/python dependencies and test caches (if useful)
+- _Requirements: CI-REQ-019_
+
+12. Coverage
+- [ ] Enable pytest-cov, produce coverage.xml, enforce `--cov-fail-under=70`
+- _Requirements: CI-REQ-020_
+
+13. Security and SBOM
+- [ ] Add Trivy scanning (fs/image) with fail on high/critical
+- [ ] Generate SBOM via Syft and upload
+- _Requirements: CI-REQ-021_
+
+14. Secret Scanning
+- [ ] Add gitleaks step with repo allowlist where necessary
+- _Requirements: CI-REQ-022_
+
+15. Token Permissions
+- [ ] Add job-level `permissions` blocks (least privilege)
+- _Requirements: CI-REQ-023_
+
+16. PR Hygiene
+- [ ] Add `.github/labeler.yml` and auto-label workflow
+- _Requirements: CI-REQ-024_
+
+17. Dependency Automation
+- [ ] Add `.github/dependabot.yml` (or Renovate) for Actions/Python
+- _Requirements: CI-REQ-025_
+
+18. Post-Deploy Smoke
+- [ ] Add smoke test step after deploy with clear assertions
+- _Requirements: CI-REQ-026_
+
+19. Environment Policies
+- [ ] Document/configure protected environments or Cloud Build approvals
+- _Requirements: CI-REQ-027_
+
+20. Provenance and Signing
+- [ ] Configure OIDC to GCP and cosign; document verification policy
+- _Requirements: CI-REQ-028_
+
 
