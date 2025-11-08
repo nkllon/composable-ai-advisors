@@ -29,27 +29,55 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y graphviz plantuml
 
-      - name: Validate PlantUML syntax
+      - name: Validate PlantUML syntax (all .puml)
         run: |
-          plantuml -checkonly docs/architecture/composable-ai-advisors-architecture.puml
+          shopt -s globstar nullglob
+          files=(**/*.puml)
+          if [ ${#files[@]} -gt 0 ]; then
+            plantuml -checkonly "${files[@]}"
+          else
+            echo "No .puml files found."
+          fi
 
-      - name: Validate DOT syntax
+      - name: Validate DOT syntax (all .dot)
         run: |
-          dot -Tsvg docs/architecture/composable-ai-advisors-architecture.dot -o /dev/null
+          shopt -s globstar nullglob
+          files=(**/*.dot)
+          if [ ${#files[@]} -gt 0 ]; then
+            for f in "${files[@]}"; do
+              dot -Tsvg "$f" -o /dev/null
+            done
+          else
+            echo "No .dot files found."
+          fi
 
-      - name: Render PlantUML -> SVG
+      - name: Render PlantUML -> SVG (all .puml)
         run: |
-          plantuml -tsvg docs/architecture/composable-ai-advisors-architecture.puml
+          shopt -s globstar nullglob
+          files=(**/*.puml)
+          if [ ${#files[@]} -gt 0 ]; then
+            plantuml -tsvg "${files[@]}"
+          else
+            echo "No .puml files to render."
+          fi
 
-      - name: Render DOT -> SVG
+      - name: Render DOT -> SVG (all .dot)
         run: |
-          dot -Tsvg docs/architecture/composable-ai-advisors-architecture.dot -o docs/architecture/composable-ai-advisors-architecture.dot.svg
+          shopt -s globstar nullglob
+          files=(**/*.dot)
+          if [ ${#files[@]} -gt 0 ]; then
+            for f in "${files[@]}"; do
+              dot -Tsvg "$f" -o "${f}.svg"
+            done
+          else
+            echo "No .dot files to render."
+          fi
 
       - name: Commit rendered SVGs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(ci): render architecture diagrams (PlantUML/DOT) to SVG"
           file_pattern: |
-            docs/architecture/composable-ai-advisors-architecture.puml.svg
-            docs/architecture/composable-ai-advisors-architecture.dot.svg
+            **/*.puml.svg
+            **/*.dot.svg
 
