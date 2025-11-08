@@ -57,7 +57,7 @@ The application follows a microservices architecture:
 
 ```mermaid
 flowchart LR
-  FE[Frontend<br/>(React)<br/>Cloud Run] -->|HTTPS| BE[Backend<br/>(FastAPI)<br/>Cloud Run]
+  FE["Frontend\n(React)\nCloud Run"] -->|HTTPS| BE["Backend\n(FastAPI)\nCloud Run"]
   BE --> GEM[Gemini AI API]
 ```
 

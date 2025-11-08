@@ -5,28 +5,28 @@
 ```mermaid
 graph TB
     subgraph "User Interface"
-        UI[React Frontend<br/>Cloud Run Service]
+        UI["React Frontend\nCloud Run Service"]
     end
     
     subgraph "API Layer"
-        API[FastAPI Backend<br/>Cloud Run Service]
+        API["FastAPI Backend\nCloud Run Service"]
     end
     
     subgraph "AI Services"
-        GEMINI[Google Gemini AI<br/>Generative AI]
+        GEMINI["Google Gemini AI\nGenerative AI"]
     end
     
     subgraph "Data Layer"
-        GUIDANCE[guidance.ttl<br/>RDF/Turtle]
-        SPORE[spore_registry.ttl<br/>RDF/Turtle]
-        PODS[PoD Files<br/>RDF/Turtle]
+        GUIDANCE["guidance.ttl\nRDF/Turtle"]
+        SPORE["spore_registry.ttl\nRDF/Turtle"]
+        PODS["PoD Files\nRDF/Turtle"]
     end
     
     subgraph "Google Cloud Platform"
-        CR1[Cloud Run<br/>Frontend Service]
-        CR2[Cloud Run<br/>Backend Service]
+        CR1["Cloud Run\nFrontend Service"]
+        CR2["Cloud Run\nBackend Service"]
         GCR[Google Container Registry]
-        SECRETS[Secret Manager<br/>Gemini API Key]
+        SECRETS["Secret Manager\nGemini API Key"]
     end
     
     UI -->|HTTPS| CR1
@@ -87,8 +87,8 @@ graph TB
 ```mermaid
 flowchart TB
   subgraph "Google Cloud Run"
-    FE[Frontend Service<br/>(Port 80)<br/>React + Nginx + Static Files]
-    BE[Backend Service<br/>(Port 8080)<br/>FastAPI + RDFLib + Gemini]
+    FE["Frontend Service\n(Port 80)\nReact + Nginx + Static Files"]
+    BE["Backend Service\n(Port 8080)\nFastAPI + RDFLib + Gemini"]
     FE -->|HTTPS| BE
   end
   BE -->|External| GEMINI[Gemini AI API]

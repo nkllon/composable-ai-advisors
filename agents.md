@@ -8,12 +8,12 @@
 
 ```mermaid
 flowchart TD
-  O[Orchestration<br/>(General-Purpose LLM)<br/>Constrained by Turtle/Markdown<br/>(Bow-Tie Pattern)]
-  D1[Domain Model A<br/>(Tools + Rules)]
-  D2[Domain Model B<br/>(Investments + Rules)]
-  D3[Domain Model C<br/>(Cognition + Rules)]
-  MCP[MCP Context &amp; Trace Layer<br/>(Secure Context Exchange)]
-  C[Clients:<br/>Mapper, Legal DocBot, OSINT, Guidance, Audit, etc.]
+  O["Orchestration\n(General-Purpose LLM)\nConstrained by Turtle/Markdown\n(Bow-Tie Pattern)"]
+  D1["Domain Model A\n(Tools + Rules)"]
+  D2["Domain Model B\n(Investments + Rules)"]
+  D3["Domain Model C\n(Cognition + Rules)"]
+  MCP["MCP Context & Trace Layer\n(Secure Context Exchange)"]
+  C["Clients:\nMapper, Legal DocBot, OSINT, Guidance, Audit, etc."]
 
   O --> D1
   O --> D2
