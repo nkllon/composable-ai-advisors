@@ -43,6 +43,9 @@ jobs:
             # Exclude verbose spec design docs from markdownlint (rule noise)
             grep -v -E '^\\.kiro/specs/.*/design\\.md$' changed_md.filtered > changed_md.txt || true
             rm -f changed_md.filtered
+            # Exclude generated/traceability summary tables (noisy rules)
+            grep -v -E '^\\.kiro/specs/traceability/' changed_md.txt > changed_md.filtered || true
+            mv changed_md.filtered changed_md.txt
           fi
           echo "Changed Markdown files:"
           cat changed_md.txt || true
@@ -62,6 +65,7 @@ jobs:
               case "$f" in
                 .cursor/commands/*) continue ;;
                 .kiro/specs/*/design.md) continue ;;
+                .kiro/specs/traceability/*) continue ;;
               esac
               markdownlint -c .markdownlint.yml "$f"
             done < changed_md.txt
