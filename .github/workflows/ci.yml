@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ chore/uv-ci ]
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Ruff check
+        run: |
+          uvx ruff --version
+          uvx ruff check .
+
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Mypy
+        run: |
+          uvx mypy --version
+          uvx mypy backend || true
+        # mypy is configured to ignore missing imports; non-zero exit can be enabled later
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Create venv and install deps
+        run: |
+          uv venv
+          . .venv/bin/activate
+          uv pip install -r backend/requirements.txt
+          uv pip install pytest pytest-cov
+      - name: Pytest
+        run: |
+          . .venv/bin/activate
+          pytest -q
+
+  security:
+    name: security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Add uv to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Create venv and install deps
+        run: |
+          uv venv
+          . .venv/bin/activate
+          uv pip install -r backend/requirements.txt
+          uv pip install bandit pip-audit
+      - name: Bandit
+        run: |
+          . .venv/bin/activate
+          bandit -q -r backend || true
+      - name: pip-audit
+        run: |
+          . .venv/bin/activate
+          pip-audit -r backend/requirements.txt || true
+
+
