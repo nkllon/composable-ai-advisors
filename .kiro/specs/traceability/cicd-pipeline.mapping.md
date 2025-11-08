@@ -14,5 +14,10 @@
 - Markdown policy and CI signal → CI-REQ-010, CI-REQ-011, CI-REQ-012
 - Path filters for CI efficiency → CI-REQ-013
 - Dev dependency isolation → CI-REQ-014
+- Local pre-commit markdown checks → CI-REQ-015
+
+## Artifacts
+- `.pre-commit-config.yaml` → CI-REQ-015
+- `docs/tooling/pre-commit.md` → CI-REQ-015
 
 

@@ -1,6 +1,7 @@
 # CI/CD Pipeline — Design Addendum
 
 Relates to: CI-REQ-010…CI-REQ-014
+; CI-REQ-015
 
 1. Markdown Lint
    - Keep `.github/workflows/markdown-syntax.yml` using `markdownlint-cli`.
@@ -15,6 +16,11 @@ Relates to: CI-REQ-010…CI-REQ-014
 3. Dev Dependencies
    - Add `requirements-dev.txt` with pytest, pytest-cov, httpx, and type stubs; install in CI only.
    - Docker images remain minimal, installing only runtime deps.
+
+4. Local Pre-commit
+   - Provide `.pre-commit-config.yaml` with a `markdownlint` hook invoking `markdownlint -c .markdownlint.yml` on staged `.md` files.
+   - Document setup in `docs/tooling/pre-commit.md` (install pre-commit, install markdownlint-cli, enable hooks).
+   - Ensure CI markdown rules and local hook use the same config to prevent drift.
 
 # Design Document
 

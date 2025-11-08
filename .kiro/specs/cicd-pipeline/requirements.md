@@ -46,6 +46,13 @@ This specification defines the requirements for the Continuous Integration and C
 1. THE repository SHALL define a dev dependency manifest (e.g., `requirements-dev.txt`) for CI tooling (pytest, pytest-cov, type stubs).
 2. THE runtime images SHALL not include dev-only dependencies (CI-REQ-014).
 
+### Requirement 10d — Local Pre-commit Checks (CI-REQ-015)
+
+#### Acceptance Criteria
+1. THE repository SHALL provide a pre-commit configuration to run markdown lint locally before commit (CI-REQ-015).
+2. THE documentation SHALL include setup instructions for enabling the hooks and installing markdownlint.
+3. THE local pre-commit behavior SHALL mirror CI markdown rules to minimize drift.
+
 ### Requirement 1 — Backend Build, Push, and Deploy
 
 **User Story:** As a developer, I want the backend container to be built, pushed, and deployed automatically, so that I can run the API on Cloud Run.
