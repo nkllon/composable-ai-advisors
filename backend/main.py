@@ -5,14 +5,15 @@ FastAPI service for managing Plans of Day (PoD) and Spore registries
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 from datetime import datetime
 import os
 import json
+import re
 from pathlib import Path
-import rdflib
-from rdflib import Graph, URIRef, Literal, BNode, Namespace
-from rdflib.namespace import RDF, RDFS, XSD
+import threading
+from rdflib import Graph, URIRef, BNode, Namespace
+from rdflib.namespace import RDF, RDFS
 import google.generativeai as genai
 
 app = FastAPI(title="Ontology Framework API", version="1.0.0")
@@ -47,6 +48,10 @@ PROV = Namespace("http://www.w3.org/ns/prov#")
 TIME = Namespace("http://www.w3.org/2006/time#")
 
 BASE_DIR = Path(__file__).parent.parent
+ALLOWED_POD_ROOT = (BASE_DIR / "docs" / "pod").resolve()
+
+_ONTOLOGY_CACHE: Dict[Path, Tuple[float, Graph]] = {}
+_CACHE_LOCK = threading.Lock()
 
 
 class WorkflowPhase(BaseModel):
@@ -82,11 +87,71 @@ class Spore(BaseModel):
 
 
 def load_ontology_file(file_path: Path) -> Graph:
-    """Load a Turtle file into an RDF graph"""
-    g = Graph()
-    if file_path.exists():
-        g.parse(file_path, format="turtle")
-    return g
+    """Load a Turtle file into an RDF graph with basic caching"""
+    if not file_path.exists():
+        return Graph()
+
+    try:
+        mtime = file_path.stat().st_mtime
+    except OSError:
+        return Graph()
+
+    with _CACHE_LOCK:
+        cached_entry = _ONTOLOGY_CACHE.get(file_path)
+        if cached_entry and cached_entry[0] >= mtime:
+            return cached_entry[1]
+
+    graph = Graph()
+    graph.parse(file_path, format="turtle")
+
+    with _CACHE_LOCK:
+        _ONTOLOGY_CACHE[file_path] = (mtime, graph)
+
+    return graph
+
+
+def resolve_pod_file_path(file_path: str) -> Optional[Path]:
+    """Resolve and validate PoD file paths against the allowed directory"""
+    if not file_path:
+        return None
+
+    candidate = (BASE_DIR / file_path).resolve()
+
+    try:
+        candidate.relative_to(ALLOWED_POD_ROOT)
+    except ValueError:
+        return None
+
+    if not candidate.is_file():
+        return None
+
+    return candidate
+
+
+def extract_json_object(text: str) -> Dict[str, Any]:
+    """Extract the first JSON object from model output"""
+    if not text:
+        raise ValueError("Empty response from model")
+
+    cleaned = text.strip()
+
+    fence_match = re.search(r"```(?:json)?\s*([\s\S]*?)```", cleaned, re.IGNORECASE)
+    if fence_match:
+        cleaned = fence_match.group(1).strip()
+
+    decoder = json.JSONDecoder()
+    idx = 0
+    while idx < len(cleaned):
+        try:
+            obj, _ = decoder.raw_decode(cleaned, idx)
+            return obj
+        except json.JSONDecodeError:
+            next_start = cleaned.find("{", idx + 1)
+            if next_start == -1:
+                break
+            idx = next_start
+
+    raise ValueError("No valid JSON object found in model response")
 
 
 def parse_pod(graph: Graph, pod_uri: URIRef) -> Optional[PlanOfDay]:
@@ -190,12 +255,14 @@ async def get_all_pods():
     pods = []
     for pod_uri in graph.subjects(RDF.type, PLAN.PlanOfDay):
         file_path = str(graph.value(pod_uri, PLAN.filePath) or "")
-        if file_path:
-            pod_file = BASE_DIR / file_path
-            pod_graph = load_ontology_file(pod_file)
-            pod = parse_pod(pod_graph, pod_uri)
-            if pod:
-                pods.append(pod)
+        pod_file = resolve_pod_file_path(file_path)
+        if pod_file is None:
+            continue
+
+        pod_graph = load_ontology_file(pod_file)
+        pod = parse_pod(pod_graph, pod_uri)
+        if pod:
+            pods.append(pod)
     
     return pods
 
@@ -211,8 +278,11 @@ async def get_pod(pod_id: str):
     
     if not file_path:
         raise HTTPException(status_code=404, detail="PoD not found")
-    
-    pod_file = BASE_DIR / file_path
+
+    pod_file = resolve_pod_file_path(file_path)
+    if pod_file is None:
+        raise HTTPException(status_code=404, detail="PoD not found")
+
     pod_graph = load_ontology_file(pod_file)
     pod = parse_pod(pod_graph, pod_uri)
     
@@ -299,18 +369,12 @@ Only return the JSON, no other text."""
         
         full_prompt = f"{system_prompt}\n\nUser request: {user_prompt}"
         response = model.generate_content(full_prompt)
-        
-        # Parse JSON from response
-        response_text = response.text.strip()
-        # Remove markdown code blocks if present
-        if response_text.startswith("```"):
-            response_text = response_text.split("```")[1]
-            if response_text.startswith("json"):
-                response_text = response_text[4:]
-        response_text = response_text.strip()
-        
-        pod_data = json.loads(response_text)
-        
+
+        response_text = getattr(response, "text", "")
+        pod_data = extract_json_object(response_text)
+        if not isinstance(pod_data, dict):
+            raise ValueError("Model response did not contain a JSON object")
+
         return {
             "success": True,
             "pod": pod_data,
