@@ -14,3 +14,4 @@ digraph CAA {
   MCP -> Clients;
 }
 // no-op
+// trigger
