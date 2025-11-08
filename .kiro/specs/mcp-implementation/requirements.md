@@ -26,11 +26,11 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. WHEN THE MCP_System is initialized, THE MCP_System SHALL create a configuration directory at `.mcp/` with subdirectories for servers, domain-models, tools, and context
+1. WHEN THE MCP_System is initialized, THE MCP_System SHALL create a configuration directory at `.mcp/` with subdirectories named servers, domain-models, tools, and context
 2. THE MCP_System SHALL provide a JSON configuration file at `.mcp/config.json` that defines MCP server connections and domain model file paths
 3. THE MCP_System SHALL validate the configuration file against a schema that includes server name, domain model path, command, arguments, environment variables, and status fields
-4. WHERE a reasoning service is registered, THE MCP_System SHALL store the server definition in `.mcp/servers/` directory and reference its domain model files
-5. THE MCP_System SHALL support enabling and disabling MCP servers without removing their configuration
+4. WHERE a ReasoningService is registered, THE MCP_System SHALL store the server definition in `.mcp/servers/` directory and reference its domain model files
+5. THE MCP_System SHALL support enabling and disabling MCPServer instances without removing their configuration
 
 ### Requirement 2
 
@@ -39,10 +39,10 @@ This specification defines the requirements for implementing the Model Context P
 #### Acceptance Criteria
 
 1. WHEN a ReasoningService is registered, THE MCP_System SHALL create a server configuration file in `.mcp/servers/` with the service name, domain model file path, capabilities, and connection details
-2. THE MCP_System SHALL expose an API endpoint at `/api/mcp/servers` that returns all registered MCP servers with their associated domain models
-3. THE ReasoningService SHALL declare its available tools via MCP protocol using a tools manifest
-4. THE ReasoningService SHALL declare its rule sets via MCP protocol using a rules manifest
-5. THE MCP_System SHALL validate that each registered ReasoningService references at least one domain model file and has at least one tool or rule set defined
+2. THE MCP_System SHALL expose an API endpoint at `/api/mcp/servers` that returns all registered MCPServer instances with their associated DomainModel files
+3. THE MCPServer SHALL declare its available tools via MCP protocol using a tools manifest
+4. THE MCPServer SHALL declare its rule sets via MCP protocol using a rules manifest
+5. THE MCP_System SHALL validate that each registered MCPServer references at least one DomainModel file and has at least one tool or rule set defined
 
 ### Requirement 3
 
@@ -50,11 +50,11 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. WHEN the Orchestrator queries for available services, THE MCP_System SHALL return a list of all enabled MCP servers with their domain models and capabilities
-2. THE MCP_System SHALL provide metadata for each ReasoningService including domain model description, domain expertise, available tools, and rule sets
-3. WHEN a ReasoningService is disabled, THE MCP_System SHALL exclude it from the discovery results
-4. THE MCP_System SHALL support filtering reasoning services by domain or capability type
-5. THE MCP_System SHALL return response time and health status for each available ReasoningService
+1. WHEN the Orchestrator queries for available services, THE MCP_System SHALL return a list of all enabled MCPServer instances with their DomainModel files and capabilities
+2. THE MCP_System SHALL provide metadata for each MCPServer including DomainModel description, domain expertise, available tools, and rule sets
+3. WHEN an MCPServer is disabled, THE MCP_System SHALL exclude it from the discovery results
+4. THE MCP_System SHALL support filtering MCPServer instances by domain or capability type
+5. THE MCP_System SHALL return response time in milliseconds and health status for each available MCPServer
 
 ### Requirement 4
 
@@ -62,11 +62,11 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. WHEN the Orchestrator sends a task to a ReasoningService, THE MCP_System SHALL transmit the context via secure ContextExchange protocol
-2. THE MCP_System SHALL support sending Spores as context bundles to ReasoningService instances
-3. WHEN a ReasoningService receives context, THE MCP_System SHALL validate the context structure before processing
+1. WHEN the Orchestrator sends a task to an MCPServer, THE MCP_System SHALL transmit the context via secure ContextExchange protocol
+2. THE MCP_System SHALL support sending Spore instances as context bundles to MCPServer instances
+3. WHEN an MCPServer receives context, THE MCP_System SHALL validate the context structure before processing
 4. THE MCP_System SHALL support synchronous and asynchronous task execution modes
-5. THE MCP_System SHALL return structured responses from ReasoningService instances to the Orchestrator with provenance metadata
+5. THE MCP_System SHALL return structured responses from MCPServer instances to the Orchestrator with provenance metadata
 
 ### Requirement 5
 
@@ -98,11 +98,11 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. THE MCP_System SHALL expose a health check endpoint at `/api/mcp/health` that returns the status of all registered reasoning services
-2. THE MCP_System SHALL track and report average response times for each ReasoningService
-3. WHEN a ReasoningService fails to respond within the timeout period, THE MCP_System SHALL mark it as unhealthy and exclude it from routing
-4. THE MCP_System SHALL provide metrics on context exchange volume, tool invocations, and error rates
-5. THE MCP_System SHALL support integration with monitoring systems via Prometheus-compatible metrics endpoint
+1. THE MCP_System SHALL expose a health check endpoint at `/api/mcp/health` that returns the status of all registered MCPServer instances
+2. THE MCP_System SHALL track and report average response times in milliseconds for each MCPServer
+3. WHEN an MCPServer fails to respond within the timeout period, THE MCP_System SHALL mark it as unhealthy and exclude it from routing
+4. THE MCP_System SHALL provide metrics on ContextExchange volume, tool invocations, and error rates
+5. THE MCP_System SHALL support integration with monitoring systems via Prometheus-compatible metrics endpoint at `/api/mcp/metrics`
 
 ### Requirement 8
 
@@ -110,11 +110,11 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. WHEN a RuleSet is registered, THE MCP_System SHALL store the rule definition in the ReasoningService's configuration
+1. WHEN a RuleSet is registered, THE MCP_System SHALL store the rule definition in the MCPServer configuration
 2. THE RuleSet SHALL be expressed in a declarative format that supports validation, policy, routing, and safety rules
-3. THE MCP_System SHALL evaluate applicable rule sets before executing tasks on a ReasoningService
-4. WHEN a rule evaluation fails, THE MCP_System SHALL return a structured error with the violated rule and reason
-5. THE MCP_System SHALL support rule precedence and conflict resolution based on rule priority
+3. THE MCP_System SHALL evaluate applicable RuleSet instances before executing tasks on an MCPServer
+4. WHEN a rule evaluation fails, THE MCP_System SHALL return a structured error with the violated rule identifier and reason
+5. THE MCP_System SHALL support rule precedence and conflict resolution based on rule priority values
 
 ### Requirement 9
 
@@ -122,11 +122,11 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. THE MCP_System SHALL support sending PoD workflow phases to appropriate ReasoningService instances based on phase requirements and domain expertise
-2. THE MCP_System SHALL enable Spores to be transmitted as context bundles via ContextExchange
-3. WHEN a PoD is executed, THE MCP_System SHALL track which ReasoningService instances participated in each workflow phase
-4. THE MCP_System SHALL update the PoD RDF/Turtle file with provenance information about ReasoningService participation
-5. THE MCP_System SHALL support linking Spores to MCP trace records for continuity tracking
+1. THE MCP_System SHALL support sending PoD workflow phases to appropriate MCPServer instances based on phase requirements and domain expertise
+2. THE MCP_System SHALL enable Spore instances to be transmitted as context bundles via ContextExchange
+3. WHEN a PoD is executed, THE MCP_System SHALL track which MCPServer instances participated in each workflow phase
+4. THE MCP_System SHALL update the PoD RDF/Turtle file with provenance information about MCPServer participation
+5. THE MCP_System SHALL support linking Spore instances to MCP trace records for continuity tracking
 
 ### Requirement 10
 
@@ -134,8 +134,8 @@ This specification defines the requirements for implementing the Model Context P
 
 #### Acceptance Criteria
 
-1. THE Orchestrator SHALL remain a general-purpose LLM constrained by models (static files) loaded from RDF/Turtle, JSON, or Markdown files
-2. THE MCP_System SHALL enforce service boundaries such that ReasoningService instances cannot directly communicate with each other
+1. THE Orchestrator SHALL remain a general-purpose LLM constrained by DomainModel files loaded from RDF/Turtle, JSON, or Markdown formats
+2. THE MCP_System SHALL enforce service boundaries such that MCPServer instances cannot directly communicate with each other
 3. THE MCP_System SHALL route all inter-agent communication through the Orchestrator
-4. WHEN domain model files are updated, THE MCP_System SHALL reload the constraints without requiring code changes to the reasoning services
-5. THE MCP_System SHALL support confidence thresholds with a default of 90 percent for orchestrator decisions
+4. WHEN DomainModel files are updated, THE MCP_System SHALL reload the constraints without requiring code changes to the MCPServer instances
+5. THE MCP_System SHALL support confidence thresholds with a default value of 0.90 for Orchestrator decisions

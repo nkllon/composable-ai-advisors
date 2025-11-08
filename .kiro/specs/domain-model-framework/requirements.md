@@ -27,8 +27,8 @@ This specification defines the requirements for implementing the Domain Model Fr
 1. THE DomainModelFramework SHALL support loading domain model files in RDF/Turtle format with .ttl extension
 2. THE DomainModelFramework SHALL support loading domain model files in JSON format with .json extension
 3. THE DomainModelFramework SHALL support loading domain model files in Markdown format with .md extension
-4. THE DomainModelFramework SHALL detect the format based on file extension
-5. WHERE a domain model file has an unsupported extension, THE DomainModelFramework SHALL return an error indicating the supported formats
+4. THE DomainModelFramework SHALL detect the format by examining the file extension
+5. WHERE a domain model file has an unsupported extension, THE DomainModelFramework SHALL return an error message listing the three supported formats
 
 ### Requirement 2
 
@@ -36,11 +36,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE ModelLoader SHALL load domain model files from a configurable base directory with default `.mcp/domain-models/`
-2. THE ModelLoader SHALL support absolute and relative file paths
-3. WHEN a domain model file does not exist, THE ModelLoader SHALL return an error with the attempted file path
-4. THE ModelLoader SHALL read file contents as UTF-8 encoded text
-5. THE ModelLoader SHALL support loading multiple domain model files concurrently
+1. THE ModelLoader SHALL load domain model files from a configurable base directory with default path `.mcp/domain-models/`
+2. THE ModelLoader SHALL resolve both absolute file paths and relative file paths
+3. WHEN a domain model file does not exist at the specified path, THE ModelLoader SHALL return an error message containing the attempted file path
+4. THE ModelLoader SHALL read file contents using UTF-8 character encoding
+5. THE ModelLoader SHALL load multiple domain model files using concurrent operations
 
 ### Requirement 3
 
@@ -48,11 +48,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. WHEN a Turtle file is loaded, THE ModelParser SHALL parse it using RDFLib into an RDF graph
-2. WHEN a JSON file is loaded, THE ModelParser SHALL parse it into a Python dictionary
-3. WHEN a Markdown file is loaded, THE ModelParser SHALL parse it into structured text sections
-4. THE ModelParser SHALL extract domain metadata including domain name, description, and version
-5. WHEN parsing fails, THE ModelParser SHALL return a structured error with the file path, format, and error details
+1. WHEN a Turtle file is loaded, THE ModelParser SHALL parse the file content using RDFLib library into an RDF graph structure
+2. WHEN a JSON file is loaded, THE ModelParser SHALL parse the file content into a Python dictionary structure
+3. WHEN a Markdown file is loaded, THE ModelParser SHALL parse the file content into structured text sections
+4. THE ModelParser SHALL extract domain metadata fields including domain name, description, and version from the parsed content
+5. WHEN parsing fails for any format, THE ModelParser SHALL return a structured error containing the file path, detected format, and specific error details
 
 ### Requirement 4
 
@@ -60,11 +60,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE ModelValidator SHALL verify that each domain model has a required domain name field
-2. THE ModelValidator SHALL verify that each domain model has a required description field
-3. WHERE a domain model is in Turtle format, THE ModelValidator SHALL verify it contains valid RDF triples
-4. WHERE a domain model is in JSON format, THE ModelValidator SHALL verify it conforms to a JSON schema
-5. WHEN validation fails, THE ModelValidator SHALL return a list of validation errors with field names and error messages
+1. THE ModelValidator SHALL verify that each domain model contains a non-empty domain name field
+2. THE ModelValidator SHALL verify that each domain model contains a non-empty description field
+3. WHERE a domain model is in Turtle format, THE ModelValidator SHALL verify the content contains valid RDF triples
+4. WHERE a domain model is in JSON format, THE ModelValidator SHALL verify the content conforms to the defined JSON schema
+5. WHEN validation fails for any reason, THE ModelValidator SHALL return a list of validation errors containing field names and specific error messages
 
 ### Requirement 5
 
@@ -72,11 +72,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE ModelRegistry SHALL maintain a registry of loaded domain models indexed by domain identifier
-2. THE ModelRegistry SHALL store metadata for each domain model including file path, format, load timestamp, and version
-3. THE ModelRegistry SHALL provide a method to list all registered domain models
-4. THE ModelRegistry SHALL provide a method to get a domain model by identifier
-5. THE ModelRegistry SHALL provide a method to search domain models by domain name or description
+1. THE ModelRegistry SHALL maintain an in-memory registry of loaded domain models indexed by unique domain identifier
+2. THE ModelRegistry SHALL store metadata for each domain model including file path, format, load timestamp, and version number
+3. THE ModelRegistry SHALL provide a method to retrieve a list of all registered domain models
+4. THE ModelRegistry SHALL provide a method to retrieve a specific domain model using its identifier
+5. THE ModelRegistry SHALL provide a method to search domain models using domain name text or description text as search criteria
 
 ### Requirement 6
 
@@ -84,11 +84,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE ModelCache SHALL cache parsed domain models in memory after first load
-2. THE ModelCache SHALL use domain identifier as the cache key
-3. THE ModelCache SHALL support cache invalidation when a domain model file is modified
-4. THE ModelCache SHALL support configurable cache TTL with default of 300 seconds
-5. THE ModelCache SHALL track cache hit and miss statistics
+1. THE ModelCache SHALL store parsed domain models in memory after the first successful load operation
+2. THE ModelCache SHALL use the domain identifier as the unique cache key for storage and retrieval
+3. THE ModelCache SHALL provide a method to invalidate cached entries when a domain model file is modified
+4. THE ModelCache SHALL support configurable cache time-to-live with a default value of 300 seconds
+5. THE ModelCache SHALL track and maintain cache hit count and cache miss count statistics
 
 ### Requirement 7
 
@@ -96,11 +96,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE DomainModelFramework SHALL provide a method to reload a specific domain model by identifier
-2. THE DomainModelFramework SHALL provide a method to reload all domain models
-3. WHEN a domain model is reloaded, THE DomainModelFramework SHALL invalidate the cache entry
-4. WHEN a domain model is reloaded, THE DomainModelFramework SHALL re-parse and re-validate the file
-5. THE DomainModelFramework SHALL return the updated domain model after successful reload
+1. THE DomainModelFramework SHALL provide a method to reload a specific domain model using its identifier
+2. THE DomainModelFramework SHALL provide a method to reload all registered domain models
+3. WHEN a domain model is reloaded, THE DomainModelFramework SHALL invalidate the corresponding cache entry before reloading
+4. WHEN a domain model is reloaded, THE DomainModelFramework SHALL re-parse the file content and re-validate the parsed model
+5. WHEN a domain model reload succeeds, THE DomainModelFramework SHALL return the updated domain model to the caller
 
 ### Requirement 8
 
@@ -108,11 +108,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE DomainModel SHALL include a list of capabilities that the domain provides
-2. THE DomainModel SHALL include a list of tool identifiers that the domain supports
-3. THE DomainModel SHALL include a list of rule set identifiers that the domain applies
-4. THE DomainModel SHALL include domain expertise keywords for routing decisions
-5. THE ModelParser SHALL extract capability metadata from all supported formats
+1. THE DomainModel SHALL include a list of capability names that the domain provides
+2. THE DomainModel SHALL include a list of tool identifiers that the domain supports for execution
+3. THE DomainModel SHALL include a list of rule set identifiers that the domain applies during reasoning
+4. THE DomainModel SHALL include a list of domain expertise keywords for orchestrator routing decisions
+5. THE ModelParser SHALL extract capability metadata fields from all three supported formats
 
 ### Requirement 9
 
@@ -120,11 +120,11 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE DomainModel SHALL include a version field in semantic versioning format
-2. THE ModelRegistry SHALL track version history for each domain model
-3. THE DomainModelFramework SHALL support loading specific versions of domain models
-4. WHEN a domain model version is incompatible, THE DomainModelFramework SHALL return an error with version details
-5. THE DomainModelFramework SHALL provide a method to list all versions of a domain model
+1. THE DomainModel SHALL include a version field using semantic versioning format (MAJOR.MINOR.PATCH)
+2. THE ModelRegistry SHALL track and store version history for each registered domain model
+3. THE DomainModelFramework SHALL support loading a specific version of a domain model using version number
+4. WHEN a domain model version is incompatible with the framework, THE DomainModelFramework SHALL return an error message containing the version details
+5. THE DomainModelFramework SHALL provide a method to retrieve a list of all available versions for a specific domain model
 
 ### Requirement 10
 
@@ -132,8 +132,8 @@ This specification defines the requirements for implementing the Domain Model Fr
 
 #### Acceptance Criteria
 
-1. THE DomainModelFramework SHALL log all domain model load operations with file path and status
-2. THE DomainModelFramework SHALL log all parsing errors with file path and error details
-3. THE DomainModelFramework SHALL log all validation errors with domain identifier and error details
-4. THE DomainModelFramework SHALL expose metrics for domain model load count, parse errors, and validation errors
-5. THE DomainModelFramework SHALL expose metrics for cache hit rate and cache size
+1. THE DomainModelFramework SHALL log all domain model load operations including file path and completion status
+2. THE DomainModelFramework SHALL log all parsing errors including file path and specific error details
+3. THE DomainModelFramework SHALL log all validation errors including domain identifier and specific error details
+4. THE DomainModelFramework SHALL expose metrics including domain model load count, parse error count, and validation error count
+5. THE DomainModelFramework SHALL expose metrics including cache hit rate percentage and current cache size

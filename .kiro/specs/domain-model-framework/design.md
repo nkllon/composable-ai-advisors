@@ -6,6 +6,20 @@ This design document describes the implementation of the Domain Model Framework 
 
 The framework provides a clean abstraction layer between domain model files and the services that consume them (orchestrator, reasoning services, MCP layer). It handles format detection, parsing, validation, caching, and registry management.
 
+### Design Rationale
+
+**Multi-Format Support**: The framework supports three formats (Turtle, JSON, Markdown) to provide flexibility for different use cases. Turtle is preferred for semantic web integration, JSON for API compatibility, and Markdown for human readability. This addresses Requirement 1.
+
+**Layered Architecture**: The design uses a layered approach (Loader → Parser → Validator → Registry → Cache) to separate concerns and enable independent testing and evolution of each component. Each layer has a single responsibility and clear interfaces.
+
+**Version Management**: The framework tracks version history per domain model and supports version-specific retrieval (Requirements 9.2, 9.3, 9.5). This enables backward compatibility and allows multiple versions of a domain model to coexist. Version compatibility checking (Requirement 9.4) ensures that domain models are compatible with the framework version.
+
+**Caching Strategy**: An in-memory cache with TTL (Requirement 6.4) balances performance with freshness. The cache uses domain_id as the key (Requirement 6.2) and tracks statistics (Requirement 6.5) for monitoring. Invalidation on reload (Requirements 6.3, 7.3) ensures consistency.
+
+**Async Operations**: The framework uses async/await patterns for file I/O (Requirement 2.5) to enable concurrent loading of multiple models without blocking. This improves performance when loading many domain models at startup.
+
+**Comprehensive Monitoring**: The framework logs all operations (Requirements 10.1, 10.2, 10.3) and exposes metrics (Requirements 10.4, 10.5) to support troubleshooting and operational visibility. This is critical for production deployments.
+
 ## Architecture
 
 ### High-Level Architecture
@@ -163,11 +177,12 @@ class ModelLoader:
 ```
 
 **Implementation Details**:
-- Use `aiofiles` for async file I/O
-- Support both absolute paths and paths relative to base_dir
-- Detect format by extension: `.ttl` → TURTLE, `.json` → JSON, `.md` → MARKDOWN
-- Read files as UTF-8
-- Raise clear errors for missing files or unsupported formats
+- Use `aiofiles` for async file I/O (Requirement: 2.5)
+- Support both absolute paths and paths relative to base_dir (Requirement: 2.2)
+- Detect format by extension: `.ttl` → TURTLE, `.json` → JSON, `.md` → MARKDOWN (Requirement: 1.4)
+- Read files as UTF-8 (Requirement: 2.4)
+- Raise clear errors for missing files with attempted path (Requirement: 2.3)
+- Raise clear errors for unsupported formats listing supported formats (Requirement: 1.5)
 
 
 ### 3. Model Parser
@@ -271,10 +286,12 @@ class ModelParser:
 ```
 
 **Parsing Strategy**:
-- **Turtle**: Use RDFLib to parse into Graph, extract metadata from RDF triples
-- **JSON**: Parse with `json.loads()`, validate structure, extract metadata from top-level fields
-- **Markdown**: Extract YAML frontmatter for metadata, parse markdown sections for content
-- All parsers extract consistent metadata structure
+- **Turtle**: Use RDFLib to parse into Graph, extract metadata from RDF triples (Requirements: 1.1, 3.1)
+- **JSON**: Parse with `json.loads()`, validate structure, extract metadata from top-level fields (Requirements: 1.2, 3.2)
+- **Markdown**: Extract YAML frontmatter for metadata, parse markdown sections for content (Requirements: 1.3, 3.3)
+- All parsers extract consistent metadata structure including domain name, description, version (Requirement: 3.4)
+- All parsers extract capability metadata: capabilities, tools, rule_sets, expertise_keywords (Requirement: 8.5)
+- Return structured error on parse failure with file path, format, and details (Requirement: 3.5)
 
 
 ### 4. Model Validator
@@ -288,8 +305,10 @@ from jsonschema import validate, ValidationError as JSONSchemaError
 class ModelValidator:
     """Validates domain model structure and content"""
     
-    def __init__(self):
+    def __init__(self, framework_version: str = "1.0.0"):
         self.json_schema = self._load_json_schema()
+        self.framework_version = framework_version
+        self.supported_version_range = self._parse_version_range()
     
     def validate(self, model: DomainModel) -> ValidationResult:
         """
@@ -298,28 +317,63 @@ class ModelValidator:
         Checks:
         - Required fields present (domain_id, domain_name, description, version)
         - Version format (semantic versioning)
+        - Version compatibility with framework
         - Format-specific validation
+        
+        Requirements: 4.1, 4.2, 4.5, 9.1, 9.4
         """
         pass
     
     def _validate_required_fields(self, metadata: DomainModelMetadata) -> List[ValidationError]:
-        """Validate required metadata fields"""
+        """
+        Validate required metadata fields
+        
+        Requirements: 4.1, 4.2
+        """
         pass
     
     def _validate_version_format(self, version: str) -> Optional[ValidationError]:
-        """Validate semantic versioning format (e.g., 1.0.0)"""
+        """
+        Validate semantic versioning format (e.g., 1.0.0)
+        
+        Requirements: 9.1
+        """
+        pass
+    
+    def _validate_version_compatibility(self, version: str) -> Optional[ValidationError]:
+        """
+        Validate domain model version compatibility with framework
+        
+        Requirements: 9.4
+        """
         pass
     
     def _validate_turtle(self, content: Graph) -> List[ValidationError]:
-        """Validate Turtle/RDF content"""
+        """
+        Validate Turtle/RDF content
+        
+        Requirements: 4.3
+        """
         pass
     
     def _validate_json(self, content: dict) -> List[ValidationError]:
-        """Validate JSON content against schema"""
+        """
+        Validate JSON content against schema
+        
+        Requirements: 4.4
+        """
         pass
     
     def _validate_markdown(self, content: dict) -> List[ValidationError]:
-        """Validate Markdown content structure"""
+        """
+        Validate Markdown content structure
+        
+        Requirements: 4.4
+        """
+        pass
+    
+    def _parse_version_range(self) -> tuple:
+        """Parse supported version range from framework version"""
         pass
     
     def _load_json_schema(self) -> dict:
@@ -341,12 +395,15 @@ class ModelValidator:
 ```
 
 **Validation Rules**:
-- **Required fields**: domain_id, domain_name, description, version
+- **Required fields**: domain_id, domain_name, description, version (Requirements: 4.1, 4.2)
 - **domain_id**: Lowercase alphanumeric with hyphens
-- **version**: Semantic versioning (e.g., 1.0.0)
-- **Turtle**: Valid RDF triples, no parsing errors
-- **JSON**: Conforms to JSON schema
-- **Markdown**: Valid YAML frontmatter, structured sections
+- **domain_name**: Non-empty string (Requirement: 4.1)
+- **description**: Non-empty string (Requirement: 4.2)
+- **version**: Semantic versioning format (e.g., 1.0.0) (Requirement: 9.1)
+- **version compatibility**: Must be compatible with framework version (Requirement: 9.4)
+- **Turtle**: Valid RDF triples, no parsing errors (Requirement: 4.3)
+- **JSON**: Conforms to JSON schema (Requirement: 4.4)
+- **Markdown**: Valid YAML frontmatter, structured sections (Requirement: 4.4)
 
 ### 5. Model Registry
 
@@ -361,31 +418,57 @@ class ModelRegistry:
     """Registry of loaded domain models"""
     
     def __init__(self):
-        self.models: Dict[str, DomainModel] = {}
-        self.version_history: Dict[str, List[str]] = {}  # domain_id -> [versions]
+        self.models: Dict[str, DomainModel] = {}  # domain_id -> latest model
+        self.version_history: Dict[str, Dict[str, DomainModel]] = {}  # domain_id -> {version -> model}
     
     def register(self, model: DomainModel) -> None:
-        """Register a domain model"""
+        """
+        Register a domain model
+        
+        Stores model indexed by domain_id and tracks version history.
+        Requirements: 5.1, 5.2, 9.2
+        """
         pass
     
     def get(self, domain_id: str, version: Optional[str] = None) -> Optional[DomainModel]:
-        """Get a domain model by ID and optional version"""
+        """
+        Get a domain model by ID and optional version
+        
+        If version is None, returns latest version.
+        Requirements: 5.4, 9.3
+        """
         pass
     
     def list_all(self) -> List[DomainModelMetadata]:
-        """List all registered domain models"""
+        """
+        List all registered domain models
+        
+        Requirements: 5.3
+        """
         pass
     
     def search(self, query: str) -> List[DomainModelMetadata]:
-        """Search domain models by name, description, or keywords"""
+        """
+        Search domain models by name, description, or keywords
+        
+        Requirements: 5.5
+        """
         pass
     
     def get_versions(self, domain_id: str) -> List[str]:
-        """Get all versions of a domain model"""
+        """
+        Get all versions of a domain model
+        
+        Requirements: 9.2, 9.5
+        """
         pass
     
-    def unregister(self, domain_id: str) -> None:
-        """Unregister a domain model"""
+    def unregister(self, domain_id: str, version: Optional[str] = None) -> None:
+        """
+        Unregister a domain model
+        
+        If version is None, unregisters all versions.
+        """
         pass
     
     def _build_search_index(self, model: DomainModel) -> str:
@@ -394,10 +477,14 @@ class ModelRegistry:
 ```
 
 **Registry Features**:
-- Index models by domain_id
-- Track version history per domain
-- Support version-specific retrieval
-- Full-text search across name, description, keywords
+- Index models by domain_id (Requirement: 5.1)
+- Store metadata including file path, format, load timestamp, version (Requirement: 5.2)
+- Track version history per domain (Requirement: 9.2)
+- Support version-specific retrieval (Requirement: 9.3)
+- List all registered models (Requirement: 5.3)
+- Retrieve specific model by identifier (Requirement: 5.4)
+- Full-text search across name, description, keywords (Requirement: 5.5)
+- Retrieve all versions for a domain (Requirement: 9.5)
 - Thread-safe operations
 
 
@@ -467,12 +554,14 @@ class ModelCache:
 ```
 
 **Caching Strategy**:
+- Store parsed models in memory after first successful load (Requirement: 6.1)
+- Use domain_id as unique cache key (Requirement: 6.2)
 - LRU-style cache with TTL
-- Default TTL: 300 seconds (5 minutes)
+- Default TTL: 300 seconds (5 minutes) (Requirement: 6.4)
 - Thread-safe with locks
-- Track hit/miss statistics
+- Track hit/miss statistics (Requirement: 6.5)
 - Periodic cleanup of expired entries
-- Invalidation on reload
+- Invalidation on reload (Requirement: 6.3, 7.3)
 
 ### 7. Domain Model Framework (Main Interface)
 
@@ -487,13 +576,18 @@ import logging
 class DomainModelFramework:
     """Main interface for domain model management"""
     
-    def __init__(self, base_dir: Path = Path(".mcp/domain-models")):
+    def __init__(self, base_dir: Path = Path(".mcp/domain-models"), framework_version: str = "1.0.0"):
         self.loader = ModelLoader(base_dir)
         self.parser = ModelParser()
-        self.validator = ModelValidator()
+        self.validator = ModelValidator(framework_version)
         self.registry = ModelRegistry()
         self.cache = ModelCache()
         self.logger = logging.getLogger(__name__)
+        self.metrics = {
+            "load_count": 0,
+            "parse_error_count": 0,
+            "validation_error_count": 0
+        }
     
     async def load_domain_model(self, file_path: str) -> DomainModel:
         """
@@ -507,35 +601,90 @@ class DomainModelFramework:
         5. Register model
         6. Cache model
         7. Return model
+        
+        Logs all operations and tracks metrics.
+        Requirements: 10.1, 10.2, 10.3, 10.4
         """
         pass
     
     async def load_multiple_domain_models(self, file_paths: List[str]) -> List[DomainModel]:
-        """Load multiple domain models concurrently"""
+        """
+        Load multiple domain models concurrently
+        
+        Requirements: 2.5
+        """
         pass
     
-    async def reload_domain_model(self, domain_id: str) -> DomainModel:
-        """Reload a domain model (invalidate cache and reload)"""
+    async def reload_domain_model(self, domain_id: str, version: Optional[str] = None) -> DomainModel:
+        """
+        Reload a domain model (invalidate cache and reload)
+        
+        Requirements: 7.1, 7.3, 7.4, 7.5
+        """
         pass
     
     async def reload_all_domain_models(self) -> List[DomainModel]:
-        """Reload all registered domain models"""
+        """
+        Reload all registered domain models
+        
+        Requirements: 7.2, 7.3, 7.4, 7.5
+        """
         pass
     
     def get_domain_model(self, domain_id: str, version: Optional[str] = None) -> Optional[DomainModel]:
-        """Get a domain model from registry (uses cache)"""
+        """
+        Get a domain model from registry (uses cache)
+        
+        Requirements: 5.4, 9.3
+        """
         pass
     
     def list_domain_models(self) -> List[DomainModelMetadata]:
-        """List all registered domain models"""
+        """
+        List all registered domain models
+        
+        Requirements: 5.3
+        """
         pass
     
     def search_domain_models(self, query: str) -> List[DomainModelMetadata]:
-        """Search domain models"""
+        """
+        Search domain models
+        
+        Requirements: 5.5
+        """
+        pass
+    
+    def get_versions(self, domain_id: str) -> List[str]:
+        """
+        Get all available versions for a specific domain model
+        
+        Requirements: 9.5
+        """
         pass
     
     def get_cache_statistics(self) -> CacheStatistics:
-        """Get cache statistics"""
+        """
+        Get cache statistics
+        
+        Requirements: 6.5, 10.5
+        """
+        pass
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """
+        Get framework metrics for monitoring
+        
+        Returns metrics including:
+        - domain_model_load_count: Total successful loads
+        - parse_error_count: Total parse errors
+        - validation_error_count: Total validation errors
+        - cache_hit_rate: Cache hit rate percentage
+        - cache_size: Current cache size
+        - registered_models_count: Number of registered models
+        
+        Requirements: 10.4, 10.5
+        """
         pass
 ```
 
@@ -661,21 +810,30 @@ As a tool execution specialist, I focus on...
 1. **File Not Found**
    - File path doesn't exist
    - **Handling**: Raise `FileNotFoundError` with path
+   - **Requirements**: 2.3
 
 2. **Unsupported Format**
    - File extension not .ttl, .json, or .md
-   - **Handling**: Raise `ValueError` with supported formats
+   - **Handling**: Raise `ValueError` with supported formats list
+   - **Requirements**: 1.5
 
 3. **Parse Error**
    - Invalid Turtle/JSON/Markdown syntax
-   - **Handling**: Raise `ParseError` with details
+   - **Handling**: Raise `ParseError` with file path, format, and details
+   - **Requirements**: 3.5
 
 4. **Validation Error**
-   - Missing required fields
+   - Missing required fields (domain_name, description)
    - Invalid field values
-   - **Handling**: Return `ValidationResult` with errors
+   - **Handling**: Return `ValidationResult` with field names and error messages
+   - **Requirements**: 4.1, 4.2, 4.5
 
-5. **Cache Error**
+5. **Version Incompatibility Error**
+   - Domain model version incompatible with framework
+   - **Handling**: Raise `VersionIncompatibilityError` with version details
+   - **Requirements**: 9.4
+
+6. **Cache Error**
    - Cache corruption
    - **Handling**: Log error, invalidate cache, reload
 
@@ -699,6 +857,10 @@ class ParseError(DomainModelError):
 
 class ValidationError(DomainModelError):
     """Error validating domain model"""
+    pass
+
+class VersionIncompatibilityError(DomainModelError):
+    """Error when domain model version is incompatible with framework"""
     pass
 ```
 
@@ -757,6 +919,62 @@ class ValidationError(DomainModelError):
 - `invalid_turtle.ttl` - Invalid Turtle syntax
 - `invalid_json.json` - Invalid JSON structure
 - `missing_fields.json` - Missing required fields
+
+## Metrics and Monitoring
+
+### Metrics Collection
+
+The framework tracks the following metrics for monitoring and troubleshooting:
+
+**Load Metrics** (Requirement: 10.4):
+- `domain_model_load_count`: Total number of successful domain model loads
+- `parse_error_count`: Total number of parsing errors
+- `validation_error_count`: Total number of validation errors
+
+**Cache Metrics** (Requirement: 10.5):
+- `cache_hit_rate`: Percentage of cache hits vs total requests
+- `cache_size`: Current number of models in cache
+
+**Registry Metrics**:
+- `registered_models_count`: Total number of registered domain models
+
+### Logging Strategy
+
+The framework logs all significant operations (Requirements: 10.1, 10.2, 10.3):
+
+**Load Operations** (Requirement: 10.1):
+- Log level: INFO
+- Message: "Loading domain model from {file_path}"
+- Include: file_path, completion status
+
+**Parse Errors** (Requirement: 10.2):
+- Log level: ERROR
+- Message: "Parse error for {file_path}"
+- Include: file_path, format, specific error details
+
+**Validation Errors** (Requirement: 10.3):
+- Log level: ERROR
+- Message: "Validation error for {domain_id}"
+- Include: domain_id, specific error details
+
+**Cache Operations**:
+- Log level: DEBUG
+- Message: "Cache hit/miss for {domain_id}"
+
+### Metrics Export
+
+The `get_metrics()` method returns a dictionary with all metrics:
+
+```python
+{
+    "domain_model_load_count": 42,
+    "parse_error_count": 2,
+    "validation_error_count": 1,
+    "cache_hit_rate": 0.85,
+    "cache_size": 15,
+    "registered_models_count": 20
+}
+```
 
 ## Performance Considerations
 
