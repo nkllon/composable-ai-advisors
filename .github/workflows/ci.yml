@@ -57,7 +57,7 @@ jobs:
           uv venv
           . .venv/bin/activate
           uv pip install -r backend/requirements.txt
-          uv pip install pytest pytest-cov
+          if [ -f backend/requirements-dev.txt ]; then uv pip install -r backend/requirements-dev.txt; else uv pip install pytest pytest-cov; fi
       - name: Pytest
         run: |
           . .venv/bin/activate

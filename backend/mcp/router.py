@@ -27,11 +27,7 @@ async def _ensure_loaded() -> None:
 		# Best-effort; endpoints remain functional with empty config
 		pass
 
-@router.on_event("startup")
-async def _startup() -> None:
-	"""Load MCP config and optionally preload domain models on startup."""
-	await _manager.load()
-	await _manager.preload_domain_models()
+# Initialization is handled by application lifespan; endpoints also lazy-load.
 
 
 @router.get("/servers")

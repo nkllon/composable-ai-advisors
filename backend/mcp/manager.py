@@ -4,18 +4,24 @@ import asyncio
 import json
 from pathlib import Path
 from typing import Optional, List
+import os
 
 from pydantic import ValidationError
 
 from backend.domain_model.framework import DomainModelFramework
-from .config import MCPConfig, DEFAULT_CONFIG_PATH
+from .config import MCPConfig, DEFAULT_CONFIG_PATH, ROOT
 
 
 class MCPConfigManager:
     """Loads and provides access to MCP configuration and domain models."""
 
     def __init__(self, config_path: Path = DEFAULT_CONFIG_PATH) -> None:
-        self.config_path = config_path
+        env_config_path = os.getenv("MCP_CONFIG_PATH")
+        if env_config_path:
+            candidate = Path(env_config_path)
+            self.config_path = candidate if candidate.is_absolute() else (ROOT / candidate).resolve()
+        else:
+            self.config_path = config_path
         self._config: MCPConfig = MCPConfig()
         self._framework: Optional[DomainModelFramework] = None
         self._lock = asyncio.Lock()
@@ -28,7 +34,12 @@ class MCPConfigManager:
     def framework(self) -> DomainModelFramework:
         if self._framework is None:
             cache_ttl = self._config.cache.default_ttl_seconds
-            base_dir = self._config.domain_models.base_dir
+            dm_env = os.getenv("MCP_DOMAIN_MODELS_DIR")
+            if dm_env:
+                dm_candidate = Path(dm_env)
+                base_dir = dm_candidate if dm_candidate.is_absolute() else (ROOT / dm_candidate).resolve()
+            else:
+                base_dir = self._config.domain_models.base_dir
             self._framework = DomainModelFramework(base_dir=base_dir, cache_ttl=cache_ttl)
         return self._framework
 
