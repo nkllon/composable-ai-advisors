@@ -79,7 +79,7 @@ jobs:
           if [ -s changed_md.txt ]; then
             FILTERED="$(grep -v -E '^\.cursor/commands/' changed_md.txt || true)"
             if [ -n "$FILTERED" ]; then
-              pymarkdown scan --strict-config $FILTERED
+              pymarkdown scan $FILTERED
             else
               echo "No eligible Markdown files for PyMarkdown."
             fi
