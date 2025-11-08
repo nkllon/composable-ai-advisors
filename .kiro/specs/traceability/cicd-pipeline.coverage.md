@@ -16,6 +16,7 @@
 - CI-REQ-012
 - CI-REQ-013
 - CI-REQ-014
+- CI-REQ-015
 
 ## Notes
 - Optional enhancements extend quality gates (unit tests pre-deploy), triggers, AR migration, manifests/IaC, smoke tests, and deployment strategies. These support determinism and operator experience.

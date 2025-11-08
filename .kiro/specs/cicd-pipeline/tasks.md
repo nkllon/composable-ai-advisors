@@ -50,4 +50,9 @@
     - Pin base image digests and leverage build cache for `npm install`/`pip install`
   - _Requirements: Design/Enhancements_
 
+7. Local Pre-commit Checks
+  - [x] Add `.pre-commit-config.yaml` with `markdownlint` hook mirroring CI config
+  - [x] Add setup guide `docs/tooling/pre-commit.md` for developer workflow
+  - _Requirements: CI-REQ-015_
+
 
