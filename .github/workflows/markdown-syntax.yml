@@ -1,0 +1,25 @@
+name: Markdown Syntax Check
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "scripts/check_markdown_syntax.py"
+  push:
+    branches:
+      - fix/**
+    paths:
+      - "**/*.md"
+      - "scripts/check_markdown_syntax.py"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Markdown syntax checker
+        run: python3 scripts/check_markdown_syntax.py
+

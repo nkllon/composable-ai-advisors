@@ -90,7 +90,8 @@ Refer to `internal-lingo-cheatsheet.md` for full glossary. Key terms:
 - `internal-lingo-cheatsheet.md` - Terminology glossary
 - `caa-glossary.ttl` - Core ontology definitions
 - `ARCHITECTURE.md` - System architecture details
-- `.cursor/rules/*.mdc` - Detailed rule sets (when created)
+- `.cursor/rules/*.mdc` - Detailed rule sets (architecture, ontology, MCP, coding standards, tooling)
+  - See `.cursor/rules/tooling.mdc` for deterministic tooling rules (no heuristic editing)
 
 ## Important Notes
 
