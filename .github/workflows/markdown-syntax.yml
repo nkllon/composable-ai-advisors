@@ -45,14 +45,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install markdownlint-cli2
-        run: npm i -g markdownlint-cli2
+      - name: Install markdownlint-cli
+        run: npm i -g markdownlint-cli
 
-      - name: Lint with markdownlint-cli2
+      - name: Lint with markdownlint
         run: |
           if [ -s changed_md.txt ]; then
             while IFS= read -r f; do
-              markdownlint-cli2 "$f" "#node_modules"
+              markdownlint "$f"
             done < changed_md.txt
           else
             echo "No changed Markdown files."
