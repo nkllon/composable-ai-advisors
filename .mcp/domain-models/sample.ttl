@@ -1,0 +1,16 @@
+@prefix caa: <http://nkllon.com/ontology/caa#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dm: <https://composable.ai/ontology/domain#> .
+
+dm:systems_architect a caa:DomainModel ;
+  caa:domainId "systems_architect" ;
+  rdfs:label "Systems Architect" ;
+  rdfs:comment "Architects systems, ensures scalability and reliability." ;
+  caa:version "1.0.0" ;
+  caa:capability "design" ;
+  caa:capability "governance" ;
+  caa:usesTool "policy_repository" ;
+  caa:appliesRules "document_decision_rationale" ;
+  caa:expertiseKeyword "architecture" .
+
+
