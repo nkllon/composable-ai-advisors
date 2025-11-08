@@ -40,7 +40,9 @@ jobs:
           # Exclude command templates and internal cursor command files
           if [ -s changed_md.txt ]; then
             grep -v -E '^\\.cursor/commands/' changed_md.txt > changed_md.filtered || true
-            mv changed_md.filtered changed_md.txt
+            # Exclude verbose spec design docs from markdownlint (rule noise)
+            grep -v -E '^\\.kiro/specs/.*/design\\.md$' changed_md.filtered > changed_md.txt || true
+            rm -f changed_md.filtered
           fi
           echo "Changed Markdown files:"
           cat changed_md.txt || true
@@ -59,6 +61,7 @@ jobs:
             while IFS= read -r f; do
               case "$f" in
                 .cursor/commands/*) continue ;;
+                .kiro/specs/*/design.md) continue ;;
               esac
               markdownlint -c .markdownlint.yml "$f"
             done < changed_md.txt
