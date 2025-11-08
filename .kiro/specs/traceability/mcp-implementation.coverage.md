@@ -1,3 +1,13 @@
+# Coverage
+
+Covered Requirements:
+
+- MCP-REQ-001: Env override for MCP config path
+- MCP-REQ-002: Env override for domain models dir
+- MCP-REQ-003: Lifespan handler for init
+- MCP-REQ-004: Test-friendly preload behavior
+- MCP-REQ-005: Repo-root resolution for defaults
+- MCP-REQ-006: Avoid hidden prod fallbacks
 # cc-sdd Coverage — mcp-implementation
 
 ## Requirements Covered (current/progressive)

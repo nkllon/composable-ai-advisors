@@ -1,3 +1,11 @@
+# Domain Model Framework — Requirements (Addendum)
+
+DMF-REQ-010: The framework SHALL resolve default base_dir for domain models from repo-root to avoid CWD dependency.
+
+DMF-REQ-011: The loader/parser/validator stack SHALL be usable with test-provided fixtures without relying on repo-global `.mcp/` content.
+
+DMF-REQ-012: Tests SHALL be able to disable preload or provide explicit model lists, ensuring deterministic registry state.
+
 # Requirements Document
 
 ## Introduction

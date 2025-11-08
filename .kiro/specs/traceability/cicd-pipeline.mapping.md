@@ -10,4 +10,9 @@
   - 6.1 Add backend unit tests to Cloud Build (pre-deploy) → 5.1, 5.3
   - Triggers, promotions, Artifact Registry, manifests/IaC, metrics/alerts, smoke tests, blue/green, build cache → quality and ops (non-functional)
 
+## New Mapping
+- Markdown policy and CI signal → CI-REQ-010, CI-REQ-011, CI-REQ-012
+- Path filters for CI efficiency → CI-REQ-013
+- Dev dependency isolation → CI-REQ-014
+
 

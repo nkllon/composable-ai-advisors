@@ -1,3 +1,25 @@
+# MCP Implementation — Design
+
+Relates to: MCP-REQ-001…MCP-REQ-006
+
+1. Config Path Resolution
+   - Read `MCP_CONFIG_PATH` env; if set, use that absolute/relative path.
+   - Else default to repo-root `/.mcp/config.json` resolved from `backend/mcp/config.py` using `Path(__file__).resolve().parents[2]`.
+   - Same pattern for `MCP_DOMAIN_MODELS_DIR` (REQ-002).
+
+2. Lifespan Events
+   - Replace `@on_event("startup")` with FastAPI lifespan context.
+   - During lifespan: async load config + optional preload.
+   - For tests: ensure endpoints lazily trigger `_ensure_loaded()` to avoid reliance on app startup hooks (REQ-003, REQ-004).
+
+3. Preload Behavior
+   - Preload only when config `domain_models.preload == true`.
+   - Tests provide a temporary config and domain models; avoid hidden sample auto-load in production (REQ-004, REQ-006).
+
+4. Defaults and Root Resolution
+   - Defaults computed from repo-root so CI/test working dirs don’t break (REQ-005).
+   - Keep sample files for tests only; guard any sample loading path behind test/dev flags (REQ-006).
+
 # Design Document
 
 ## Overview

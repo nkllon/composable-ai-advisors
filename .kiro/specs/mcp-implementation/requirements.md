@@ -1,3 +1,14 @@
+# MCP Implementation — Requirements
+
+IDs use the MCP-REQ-* namespace for traceability.
+
+- MCP-REQ-001: The MCP component SHALL support overriding the MCP config file path via environment variable `MCP_CONFIG_PATH`. Default remains repo-root `/.mcp/config.json`.
+- MCP-REQ-002: The MCP component SHALL support overriding the domain-models base directory via environment variable `MCP_DOMAIN_MODELS_DIR`. Default remains repo-root `/.mcp/domain-models`.
+- MCP-REQ-003: The MCP HTTP router SHALL adopt FastAPI lifespan events instead of `@on_event(\"startup\")` to initialize/reload configuration in a robust, testable manner.
+- MCP-REQ-004: Preload behavior SHALL be test-friendly: tests can disable or control preload via config/env without depending on repo-global files.
+- MCP-REQ-005: The MCP config loader SHALL not depend on working-directory assumptions; it SHALL resolve repo-root reliably when defaults are used.
+- MCP-REQ-006: The system SHALL avoid hidden production fallbacks (like silently loading sample models) unless explicitly activated for tests/dev via flag/env.
+
 # Requirements Document
 
 ## Introduction

@@ -1,3 +1,13 @@
+# Mapping
+
+| Requirement ID | Spec Section | Artifact/Code |
+| --- | --- | --- |
+| MCP-REQ-001 | requirements.md | backend/mcp/manager.py (env handling), backend/mcp/config.py |
+| MCP-REQ-002 | requirements.md | backend/mcp/manager.py (env handling), backend/mcp/config.py |
+| MCP-REQ-003 | design.md | backend/mcp/router.py (migrate to lifespan) |
+| MCP-REQ-004 | requirements.md | backend/tests/mcp (fixtures to control preload) |
+| MCP-REQ-005 | design.md | backend/mcp/config.py (ROOT-based defaults) |
+| MCP-REQ-006 | design.md | Test fixtures over prod fallbacks |
 # cc-sdd Mapping — mcp-implementation
 
 ## Task → Requirement IDs
