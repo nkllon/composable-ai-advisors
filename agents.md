@@ -6,35 +6,22 @@
 
 ## Core Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              Orchestration                            │
-│   (General-Purpose LLM)                              │
-│   Constrained by Turtle/Markdown                    │
-│   (Bow-Tie Pattern)                                  │
-└─────────────────────────────────────────────────────────┘
-                        │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│ Domain Model │ │ Domain Model │ │ Domain Model │
-│      A       │ │      B       │ │      C       │
-│ (Tools+Rules)│ │(Investments+ │ │(Cognition+   │
-│              │ │    Rules)    │ │   Rules)     │
-└──────────────┘ └──────────────┘ └──────────────┘
-        │               │               │
-        └───────────────┼───────────────┘
-                        ▼
-        ┌───────────────────────────────┐
-        │   MCP Context & Trace Layer   │
-        │  (Secure Context Exchange)    │
-        └───────────────────────────────┘
-                        │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-    [Clients: Arbitrary examples - Mapper, Legal DocBot, 
-     OSINT, Guidance, Audit, etc. - any application 
-     consuming orchestrated outputs]
+```mermaid
+flowchart TD
+  O[Orchestration<br/>(General-Purpose LLM)<br/>Constrained by Turtle/Markdown<br/>(Bow-Tie Pattern)]
+  D1[Domain Model A<br/>(Tools + Rules)]
+  D2[Domain Model B<br/>(Investments + Rules)]
+  D3[Domain Model C<br/>(Cognition + Rules)]
+  MCP[MCP Context &amp; Trace Layer<br/>(Secure Context Exchange)]
+  C[Clients:<br/>Mapper, Legal DocBot, OSINT, Guidance, Audit, etc.]
+
+  O --> D1
+  O --> D2
+  O --> D3
+  D1 --> MCP
+  D2 --> MCP
+  D3 --> MCP
+  MCP --> C
 ```
 
 ## Key Concepts

@@ -19,39 +19,26 @@ The system implements **three bow-tie patterns**:
 
 ## Core Architecture
 
-![Modular AI Framework](docs/architecture/modular-ai-framework-diagram.png)
+![Modular AI Framework](docs/architecture/modular-ai-framework-diagram.svg)
 
 *From Monolithic LLMs to Modular AI - A Modern Framework for Composable AI Systems*
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              Orchestration                            │
-│   (General-Purpose LLM)                              │
-│   Constrained by Turtle/Markdown                    │
-│   (Bow-Tie Pattern)                                  │
-└─────────────────────────────────────────────────────────┘
-                        │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│ Domain Model │ │ Domain Model │ │ Domain Model │
-│      A       │ │      B       │ │      C       │
-│ (Tools+Rules)│ │(Investments+ │ │(Cognition+   │
-│              │ │    Rules)    │ │   Rules)     │
-└──────────────┘ └──────────────┘ └──────────────┘
-        │               │               │
-        └───────────────┼───────────────┘
-                        ▼
-        ┌───────────────────────────────┐
-        │   MCP Context & Trace Layer   │
-        │  (Secure Context Exchange)    │
-        └───────────────────────────────┘
-                        │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-    [Clients: Arbitrary examples - Mapper, Legal DocBot, 
-     OSINT, Guidance, Audit, etc. - any application 
-     consuming orchestrated outputs]
+```mermaid
+flowchart TD
+  O[Orchestration<br/>(General-Purpose LLM)<br/>Constrained by Turtle/Markdown<br/>(Bow-Tie Pattern)]
+  D1[Domain Model A<br/>(Tools + Rules)]
+  D2[Domain Model B<br/>(Investments + Rules)]
+  D3[Domain Model C<br/>(Cognition + Rules)]
+  MCP[MCP Context &amp; Trace Layer<br/>(Secure Context Exchange)]
+  C[Clients:<br/>Mapper, Legal DocBot, OSINT, Guidance, Audit, etc.]
+
+  O --> D1
+  O --> D2
+  O --> D3
+  D1 --> MCP
+  D2 --> MCP
+  D3 --> MCP
+  MCP --> C
 ```
 
 ## Key Concepts
@@ -122,20 +109,21 @@ The system implements **three bow-tie patterns**:
 
 ## Project Structure
 
-```
-composable-ai-advisors/
-├── backend/                 # FastAPI backend service
-├── frontend/               # React frontend service
-├── docs/                   # Documentation
-│   ├── pod/               # Plans of Day examples
-│   ├── architecture/      # Architecture diagrams
-│   └── archive/           # Historical/hackathon docs
-├── scripts/                # Build and deployment scripts
-├── *.ttl                   # RDF/Turtle ontology files (root)
-├── agents.md               # AI agent guidance
-├── ARCHITECTURE.md         # Architecture documentation
-├── DEPLOYMENT.md           # Deployment guide
-└── README.md              # This file
+```mermaid
+flowchart TD
+  R[composable-ai-advisors/]
+  R --> backend[backend/ - FastAPI backend service]
+  R --> frontend[frontend/ - React frontend service]
+  R --> docs[docs/ - Documentation]
+  docs --> pod[pod/ - Plans of Day examples]
+  docs --> arch[architecture/ - Architecture diagrams]
+  docs --> arcv[archive/ - Historical/hackathon docs]
+  R --> scripts[scripts/ - Build and deployment scripts]
+  R --> ttl[*.ttl - RDF/Turtle ontology files (root)]
+  R --> agents[agents.md - AI agent guidance]
+  R --> archmd[ARCHITECTURE.md - Architecture documentation]
+  R --> deploymd[DEPLOYMENT.md - Deployment guide]
+  R --> readme[README.md - This file]
 ```
 
 **Configuration files** (hidden from view):

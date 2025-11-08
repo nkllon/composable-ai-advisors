@@ -66,23 +66,24 @@
 
 ## Directory Structure
 
-```
-composable-ai-advisors/
-├── .cursorrules                    # ✅ Created
-├── agents.md                       # ✅ Created
-├── BOOTSTRAP.md                    # ✅ Created
-├── SETUP_SUMMARY.md                # ✅ Created (this file)
-├── .cursor/
-│   ├── rules/
-│   │   ├── architecture.mdc       # ✅ Created
-│   │   ├── ontology.mdc           # ✅ Created
-│   │   ├── mcp.mdc                # ✅ Created
-│   │   └── coding-standards.mdc   # ✅ Created
-│   └── context/
-│       └── project-context.md     # ✅ Created
-├── .mcp/
-│   └── README.md                   # ✅ Created
-└── [existing files...]
+```mermaid
+flowchart TD
+  R[composable-ai-advisors/]
+  R --> cursorrules[.cursorrules - ✅ Created]
+  R --> agents[agents.md - ✅ Created]
+  R --> bootstrap[BOOTSTRAP.md - ✅ Created]
+  R --> setup[SETUP_SUMMARY.md - ✅ Created (this file)]
+  R --> cursor[.cursor/]
+  cursor --> rules[rules/]
+  rules --> archmdc[architecture.mdc - ✅ Created]
+  rules --> ontmdc[ontology.mdc - ✅ Created]
+  rules --> mcpmdc[mcp.mdc - ✅ Created]
+  rules --> codemdc[coding-standards.mdc - ✅ Created]
+  cursor --> context[context/]
+  context --> projctx[project-context.md - ✅ Created]
+  R --> mcp[.mcp/]
+  mcp --> readme[README.md - ✅ Created]
+  R --> existing[[existing files...]]
 ```
 
 ## Recommendations

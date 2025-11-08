@@ -84,28 +84,14 @@ graph TB
 
 ## Deployment Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Google Cloud Run                      │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌──────────────────┐         ┌──────────────────┐     │
-│  │  Frontend        │         │  Backend         │     │
-│  │  Service         │────────▶│  Service         │     │
-│  │  (Port 80)       │  HTTPS  │  (Port 8080)     │     │
-│  │                  │         │                  │     │
-│  │  - React App     │         │  - FastAPI       │     │
-│  │  - Nginx         │         │  - RDFLib        │     │
-│  │  - Static Files  │         │  - Gemini AI     │     │
-│  └──────────────────┘         └──────────────────┘     │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-                   ┌──────────────────┐
-                   │  Gemini AI API   │
-                   │  (External)      │
-                   └──────────────────┘
+```mermaid
+flowchart TB
+  subgraph "Google Cloud Run"
+    FE[Frontend Service<br/>(Port 80)<br/>React + Nginx + Static Files]
+    BE[Backend Service<br/>(Port 8080)<br/>FastAPI + RDFLib + Gemini]
+    FE -->|HTTPS| BE
+  end
+  BE -->|External| GEMINI[Gemini AI API]
 ```
 
 ## Key Features
