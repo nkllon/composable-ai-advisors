@@ -1,0 +1,37 @@
+# Deterministic Tooling Rules (No Heuristic Editing)
+
+## Principles
+- Prefer deterministic tools and validators over manual, heuristic editing.
+- Do not hand-edit rendered diagram text in Markdown when a source file exists.
+- All diagram and Markdown validations must be performed via scripts/CI.
+
+## Mermaid Diagrams
+- Author diagrams in `.mmd` files under `tools/mermaid-check/`.
+- Render via CLI/CI into `.svg` or verify parsing outcome in CI.
+- In Markdown ` ```mermaid ` code fences:
+  - No HTML `<br>`/`<br/>`/`<br />`. Use `\n` within quoted labels instead.
+  - Quote labels that contain special characters (e.g., `/`, `*`, parentheses).
+  - Start with a known directive: `flowchart`, `graph`, `sequenceDiagram`, `classDiagram`, `stateDiagram`, `erDiagram`, `journey`, `gantt`, or `pie`.
+
+## PlantUML and DOT
+- Author PlantUML (`.puml`) and Graphviz (`.dot`) sources under `docs/architecture/`.
+- CI renders to `.svg`; Markdown should reference the `.svg` outputs, not inline the rendered text.
+
+## Markdown Syntax Checks
+- Use `scripts/check_markdown_syntax.py` to validate:
+  - Balanced fenced code blocks.
+  - Mermaid blocks have no HTML `<br>` and include a directive.
+  - Headings must have a space after `#` (e.g., `# Title`).
+- CI enforces these checks on every PR/push.
+
+## Local Verification (Optional)
+- Mermaid CLI via Docker:
+  - `docker run --rm -v "$PWD/tools/mermaid-check:/data" ghcr.io/mermaid-js/mermaid-cli:latest mmdc -i /data/README-architecture.mmd -o /data/README-architecture.svg`
+  - `docker run --rm -v "$PWD/tools/mermaid-check:/data" ghcr.io/mermaid-js/mermaid-cli:latest mmdc -i /data/README-structure.mmd -o /data/README-structure.svg`
+- Markdown checks:
+  - `python3 scripts/check_markdown_syntax.py`
+
+## Process
+- One PR at a time. Rebase-merge into `main`. Delete feature branch after merge.
+- Rebase on `origin/main` immediately before pushing/merging to minimize conflicts.
+
