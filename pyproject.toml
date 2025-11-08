@@ -1,0 +1,49 @@
+[project]
+name = "composable-ai-advisors"
+version = "0.0.0"
+description = "Composable AI Advisors - multi-agent mesh architecture (backend/frontends, ontologies)"
+requires-python = ">=3.11"
+readme = "README.md"
+authors = [{name = "Niklon"}]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = [
+    ".github",
+    "frontend",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "I",  # isort
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_no_return = false
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+no_implicit_optional = false
+show_error_codes = true
+pretty = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+testpaths = [
+  "backend/tests",
+]
+
+
