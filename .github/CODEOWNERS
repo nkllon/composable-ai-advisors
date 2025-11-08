@@ -1,0 +1,14 @@
+# CODEOWNERS
+# Temporary owners until org team (@org/beast) is created.
+# Update to @<org>/beast after team creation and membership is set.
+
+# Specs and traceability
+.kiro/specs/** @louspringer
+
+# Backend service
+backend/** @louspringer
+
+# Workflows and repo meta
+.github/** @louspringer
+
+
