@@ -1,0 +1,67 @@
+{
+  "version": "1.0",
+  "cache": {
+    "default_ttl_seconds": 300
+  },
+  "domain_models": {
+    "base_dir": ".mcp/domain-models",
+    "files": [
+      "sample.ttl"
+    ],
+    "preload": true
+  },
+  "servers": [
+    {
+      "id": "local-mcp",
+      "name": "Local MCP",
+      "type": "local",
+      "enabled": true,
+      "metadata": {}
+    }
+  ],
+  "tools": []
+}
+{
+  "version": "1.0.0",
+  "cache": {
+    "default_ttl_seconds": 300
+  },
+  "domain_models": {
+    "base_dir": ".mcp/domain-models",
+    "files": [
+      "systems-architect.ttl",
+      "research-analyst.ttl",
+      "compliance-officer.ttl",
+      "orchestrator-constraints.ttl"
+    ],
+    "preload": true
+  },
+  "servers": [
+    {
+      "id": "example-service",
+      "name": "Example Tools Reasoning Service",
+      "type": "http",
+      "endpoint": "http://localhost:8081",
+      "enabled": true,
+      "metadata": {
+        "domain": "tools",
+        "capabilities": ["tool_execution", "validation"],
+        "tools_manifest": ".mcp/servers/example-service-tools.json",
+        "rules_manifest": ".mcp/servers/example-service-rules.json",
+        "domain_model_path": ".mcp/domain-models/example-tools-domain.ttl",
+        "health_check_url": "http://localhost:8081/health",
+        "timeout": 30
+      }
+    }
+  ],
+  "trace_config": {
+    "enabled": true,
+    "storage_path": ".mcp/traces/mcp_traces.ttl",
+    "retention_days": 90
+  },
+  "orchestrator": {
+    "confidence_threshold": 0.9,
+    "model_constraints_path": ".mcp/domain-models/orchestrator-constraints.ttl"
+  }
+}
+
