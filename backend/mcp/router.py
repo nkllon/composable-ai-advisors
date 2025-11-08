@@ -7,6 +7,16 @@ router = APIRouter(prefix="/api/mcp", tags=["mcp"])
 
 _manager = MCPConfigManager()
 
+async def _ensure_loaded() -> None:
+	"""Ensure MCP config is loaded and domain models preloaded at first access."""
+	if not _manager.config.servers:
+		try:
+			await _manager.load()
+			await _manager.preload_domain_models()
+		except Exception:
+			# Best-effort; endpoints remain functional with empty config
+			pass
+
 @router.on_event("startup")
 async def _startup() -> None:
 	"""Load MCP config and optionally preload domain models on startup."""
@@ -17,12 +27,14 @@ async def _startup() -> None:
 @router.get("/servers")
 async def list_servers() -> list:
 	"""List registered MCP servers."""
+	await _ensure_loaded()
 	return [server.model_dump() for server in _manager.config.servers]
 
 
 @router.get("/health")
 async def health() -> dict:
 	"""MCP health summary."""
+	await _ensure_loaded()
 	framework = _manager.framework
 	cache_stats = framework.get_cache_statistics()
 	return {
@@ -41,6 +53,7 @@ async def health() -> dict:
 @router.get("/metrics")
 async def metrics() -> dict:
 	"""MCP and domain-model metrics."""
+	await _ensure_loaded()
 	framework = _manager.framework
 	cache_stats = framework.get_cache_statistics()
 	return {
@@ -63,6 +76,7 @@ async def metrics() -> dict:
 @router.get("/domain-models")
 async def list_domain_models() -> list:
 	"""List registered domain models' metadata."""
+	await _ensure_loaded()
 	return [meta.model_dump() for meta in _manager.framework.registry.list_all()]
 
 
