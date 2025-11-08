@@ -1,0 +1,16 @@
+flowchart TD
+  O["Orchestration\n(General-Purpose LLM)\nConstrained by Turtle/Markdown\n(Bow-Tie Pattern)"]
+  D1["Domain Model A\n(Tools + Rules)"]
+  D2["Domain Model B\n(Investments + Rules)"]
+  D3["Domain Model C\n(Cognition + Rules)"]
+  MCP["MCP Context & Trace Layer\n(Secure Context Exchange)"]
+  C["Clients:\nMapper, Legal DocBot, OSINT, Guidance, Audit, etc."]
+
+  O --> D1
+  O --> D2
+  O --> D3
+  D1 --> MCP
+  D2 --> MCP
+  D3 --> MCP
+  MCP --> C
+
