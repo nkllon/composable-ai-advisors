@@ -1,0 +1,11 @@
+repos:
+  - repo: local
+    hooks:
+      - id: markdownlint
+        name: markdownlint
+        entry: markdownlint -c .markdownlint.yml
+        language: system
+        files: \.md$
+        types: [markdown]
+
+
