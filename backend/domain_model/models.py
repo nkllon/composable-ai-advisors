@@ -8,48 +8,51 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class DomainModelFormat(str, Enum):
-	"""Supported domain model formats"""
-	TURTLE = "turtle"
-	JSON = "json"
-	MARKDOWN = "markdown"
+    """Supported domain model formats."""
+
+    TURTLE = "turtle"
+    JSON = "json"
+    MARKDOWN = "markdown"
 
 
 class DomainModelMetadata(BaseModel):
-        """Metadata for a domain model"""
+    """Metadata for a domain model."""
 
-        domain_id: str
-        domain_name: str
-        description: str
-        version: str
-        format: DomainModelFormat
-        file_path: str
-        loaded_at: datetime
-        capabilities: List[str] = Field(default_factory=list)
-        tools: List[str] = Field(default_factory=list)
-        rule_sets: List[str] = Field(default_factory=list)
-        expertise_keywords: List[str] = Field(default_factory=list)
+    domain_id: str
+    domain_name: str
+    description: str
+    version: str
+    format: DomainModelFormat
+    file_path: str
+    loaded_at: datetime
+    capabilities: List[str] = Field(default_factory=list)
+    tools: List[str] = Field(default_factory=list)
+    rule_sets: List[str] = Field(default_factory=list)
+    expertise_keywords: List[str] = Field(default_factory=list)
 
 
 class DomainModel(BaseModel):
-        """Parsed domain model"""
-        metadata: DomainModelMetadata
-        content: Any  # RDF Graph, dict, or structured text
-        raw_content: str  # Original file content
+    """Parsed domain model."""
 
-        model_config = ConfigDict(arbitrary_types_allowed=True)
+    metadata: DomainModelMetadata
+    content: Any  # RDF Graph, dict, or structured text
+    raw_content: str  # Original file content
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class ValidationIssue(BaseModel):
-	"""Domain model validation issue"""
-	field: str
-	message: str
-	severity: str  # "error", "warning"
+    """Domain model validation issue."""
+
+    field: str
+    message: str
+    severity: str  # "error", "warning"
 
 
 class ValidationResult(BaseModel):
-        """Result of domain model validation"""
+    """Result of domain model validation."""
 
-        is_valid: bool
-        errors: List[ValidationIssue] = Field(default_factory=list)
+    is_valid: bool
+    errors: List[ValidationIssue] = Field(default_factory=list)
 
 

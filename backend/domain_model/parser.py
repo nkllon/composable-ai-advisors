@@ -14,7 +14,6 @@ from .models import DomainModel, DomainModelFormat, DomainModelMetadata
 CAA = Namespace("http://nkllon.com/ontology/caa#")
 DOMAIN_NS = Namespace("https://composable.ai/ontology/domain#")
 
-
 class ModelParser:
 	"""Parses raw domain model files into structured domain model objects."""
 
