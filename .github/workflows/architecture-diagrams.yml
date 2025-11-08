@@ -8,7 +8,9 @@ on:
       - 'docs/architecture/composable-ai-advisors-architecture.md'
   push:
     branches:
+      - main
       - fix/**
+      - docs/**
     paths:
       - 'docs/architecture/composable-ai-advisors-architecture.puml'
       - 'docs/architecture/composable-ai-advisors-architecture.dot'
