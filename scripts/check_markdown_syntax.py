@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-FENCE_OPEN_RE = re.compile(r"^```(\w+)?\s*$")
+FENCE_OPEN_RE = re.compile(r"^```([A-Za-z0-9_\-]+)?\s*$")
 FENCE_CLOSE_RE = re.compile(r"^```\s*$")
 MERMAID_FENCE_RE = re.compile(r"^```mermaid\s*$", re.IGNORECASE)
 HTML_BR_RE = re.compile(r"<br\s*/?>", re.IGNORECASE)
@@ -29,7 +29,7 @@ MERMAID_DIRECTIVE_RE = re.compile(
     r"^\s*(flowchart|graph|sequenceDiagram|classDiagram|stateDiagram-v2|stateDiagram|erDiagram|journey|gantt|pie)\b",
     re.IGNORECASE,
 )
-BAD_HEADING_RE = re.compile(r"^(#{1,6})(\S)")  # '#' immediately followed by non-space
+BAD_HEADING_RE = re.compile(r"^(#{1,6})(?!\s)")  # no space after heading hashes
 
 
 def list_markdown_files(root: Path) -> List[Path]:
@@ -86,7 +86,14 @@ def check_mermaid(lines: List[str], path: Path) -> List[str]:
 
 def check_headings(lines: List[str], path: Path) -> List[str]:
     violations: List[str] = []
+    in_fence = False
     for i, line in enumerate(lines, start=1):
+        # toggle fence tracking to avoid checking headings inside code fences
+        if FENCE_OPEN_RE.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
         if BAD_HEADING_RE.match(line):
             violations.append(f"{path}:{i}: heading must have a space after '#', e.g., '# Title'")
     return violations
