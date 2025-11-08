@@ -27,6 +27,25 @@ This specification defines the requirements for the Continuous Integration and C
 
 ## Requirements
 
+### Requirement 10a — Markdown Policy and CI Signal (CI-REQ-010…CI-REQ-012)
+
+#### Acceptance Criteria
+1. THE repository SHALL include a single authoritative `.markdownlint.yml` tuned for spec documents (CI-REQ-010).
+2. THE markdown workflow SHALL exclude generator/internal paths (e.g., `.cursor/commands/**`) from checks (CI-REQ-011).
+3. THE pipeline SHALL run one markdown linter (markdownlint) unless secondary linters are explicitly harmonized (CI-REQ-012).
+
+### Requirement 10b — Path Filters for CI Efficiency (CI-REQ-013)
+
+#### Acceptance Criteria
+1. THE Python lint/typecheck/test jobs SHALL trigger only when backend Python or workflow files change.
+2. THE markdown job SHALL trigger only when `**/*.md` changes (CI-REQ-013).
+
+### Requirement 10c — Developer Dependencies Isolation (CI-REQ-014)
+
+#### Acceptance Criteria
+1. THE repository SHALL define a dev dependency manifest (e.g., `requirements-dev.txt`) for CI tooling (pytest, pytest-cov, type stubs).
+2. THE runtime images SHALL not include dev-only dependencies (CI-REQ-014).
+
 ### Requirement 1 — Backend Build, Push, and Deploy
 
 **User Story:** As a developer, I want the backend container to be built, pushed, and deployed automatically, so that I can run the API on Cloud Run.

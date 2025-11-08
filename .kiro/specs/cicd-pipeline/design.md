@@ -1,3 +1,21 @@
+# CI/CD Pipeline — Design Addendum
+
+Relates to: CI-REQ-010…CI-REQ-014
+
+1. Markdown Lint
+   - Keep `.github/workflows/markdown-syntax.yml` using `markdownlint-cli`.
+   - Configure `.markdownlint.yml` in repo-root for spec style.
+   - Exclude `.cursor/commands/**` during changed-files evaluation and loop execution.
+   - Remove/disable PyMarkdown step unless rule harmonization is completed.
+
+2. Path Filters
+   - Use `paths` or `paths-ignore` in GitHub Actions for Python jobs to limit triggers to backend and workflow files.
+   - Keep markdown job scoped to `**/*.md`.
+
+3. Dev Dependencies
+   - Add `requirements-dev.txt` with pytest, pytest-cov, httpx, and type stubs; install in CI only.
+   - Docker images remain minimal, installing only runtime deps.
+
 # Design Document
 
 ## Overview

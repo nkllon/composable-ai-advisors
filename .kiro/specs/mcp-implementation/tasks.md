@@ -6,6 +6,11 @@
   - [x] Provide Pydantic config models in code (`backend/mcp/config.py`) for runtime validation
   - _Requirements: 1.1, 1.2, 1.3, 1.5_
 
+- [ ] 1a. Config overrides and path resolution
+  - [ ] Add env override `MCP_CONFIG_PATH` (MCP-REQ-001)
+  - [ ] Add env override `MCP_DOMAIN_MODELS_DIR` (MCP-REQ-002)
+  - [ ] Resolve defaults from repo-root, independent of CWD (MCP-REQ-005)
+
 - [ ] 2. Implement MCP Configuration Manager
   - [ ] 2.1 Create backend/mcp/manager.py and backend/mcp/config.py with MCPServerConfig and MCPConfigManager classes
     - [x] Create `backend/mcp/` directory and `__init__.py`
@@ -41,6 +46,10 @@
     - Test domain model reloading
     - Test filtering by domain and capability
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 3.4, 10.4_
+
+- [ ] 2a. Test-friendly preload behavior
+  - [ ] Allow disabling preload via config/env in tests (MCP-REQ-004)
+  - [ ] Remove/guard production fallback sample auto-load; use test fixtures (MCP-REQ-006)
 
 - [ ] 3. Implement Trace and Audit Service
   - [ ] 3.1 Create backend/mcp/trace_service.py with TraceRecord model and TraceService class
@@ -254,6 +263,8 @@
     - [x] Add `/api/mcp/domain-models` endpoint (GET) - list registered domain models
     - [x] Add `/api/mcp/reload` endpoint (POST) - reload config and preload models
     - _Requirements: 2.2, 2.3, 2.4, 3.1, 3.5, 4.1, 6.1, 7.1, 7.5, 8.1_
+
+  - [ ] 9.1a Replace startup hooks with lifespan handlers (MCP-REQ-003)
 
   - [ ] 9.2 Add request/response models for API
     - Create Pydantic models for all API requests and responses in router.py

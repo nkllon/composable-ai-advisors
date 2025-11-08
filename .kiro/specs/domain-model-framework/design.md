@@ -1,3 +1,17 @@
+# Domain Model Framework — Design (Addendum)
+
+Relates to: DMF-REQ-010…DMF-REQ-012
+
+1. Root Resolution
+   - Derive repo-root via `Path(__file__).resolve().parents[2]` for defaults; allow explicit overrides at construction time.
+
+2. Test Fixtures
+   - Prefer tests to pass `base_dir` pointing to a temp fixture directory.
+   - Avoid hidden sample auto-load; tests should explicitly load models or enable preload with a provided list.
+
+3. Determinism
+   - Provide APIs to query cache/metrics and clear registry if needed in test setup/teardown.
+
 # Design Document
 
 ## Overview
