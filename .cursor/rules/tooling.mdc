@@ -35,3 +35,8 @@
 - One PR at a time. Rebase-merge into `main`. Delete feature branch after merge.
 - Rebase on `origin/main` immediately before pushing/merging to minimize conflicts.
 
+## Operational Editing Policy
+- Apply changes via git commits on a feature branch and open a PR; do not rely on inline editor approvals.
+- Prefer scripted edits (generators/linters/formatters) or targeted file writes over ad-hoc patching.
+- If a change is reversible or validated by a tool, include the tool invocation and outputs in CI.
+
