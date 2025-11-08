@@ -21,11 +21,8 @@ spec:
         env:
         - name: PORT
           value: "8080"
-        - name: GEMINI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: gemini-api-key
-              key: api-key
+        - name: ENABLE_MCP_API
+          value: "1"
         resources:
           limits:
             cpu: "2"

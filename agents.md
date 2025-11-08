@@ -40,7 +40,7 @@ flowchart TD
 ### 2. MCP (Model Context Protocol)
 - **Purpose**: Secure protocol for context exchange between agents
 - **Components**: Context, tools, metadata, traceability
-- **Implementation**: Configuration in `.mcp/` directory (to be added)
+- **Implementation**: Configuration in `.mcp/` directory (present). Authoritative specs live under `.kiro/specs/`.
 - **Benefits**: Provenance tracking, audit trails, secure context sharing
 
 ### 3. Spores
@@ -238,9 +238,15 @@ The system uses **three bow-tie patterns** (all are present):
 - `rules/*.mdc` - Modular rule sets
 - `context/` - Project context files
 
-### MCP Configuration (`.mcp/` - to be added)
-- `config.json` - MCP server configuration
-- Domain model definitions
+### MCP Configuration (`.mcp/`)
+- `config.json` - MCP server configuration (validated JSON; includes servers, domain model preload, trace settings)
+- `domain-models/` - Domain model definitions (RDF/Turtle, JSON, Markdown)
+- `servers/` - Server definitions and manifests (tools, rules)
+
+### KIRO SDD Specs (`.kiro/specs/`)
+- `domain-model-framework/` - Requirements, design, tasks
+- `mcp-implementation/` - Requirements, design, tasks
+- `orchestrator-service/` - Requirements, design, tasks
 - Tool adapter configurations
 
 ## Terminology Reference
@@ -282,7 +288,26 @@ When implementing features, ask:
 - Current README.md may not reflect actual project state
 - Always prioritize modularity and composability
 - Maintain semantic web standards (RDF/Turtle) for data
+
+## Spec-Driven Development (MANDATORY KIRO Gate)
  
+- The authoritative requirements and design live in `.kiro/specs/`.
+- Before any analysis, implementation, or assessment, you MUST:
+  1) Read the relevant spec set under `.kiro/specs/{domain-model-framework|mcp-implementation|orchestrator-service}/requirements.md`
+  2) Review the corresponding `design.md` and `tasks.md`
+  3) Map planned changes or assessments back to explicit requirement IDs and acceptance criteria
+- Do not proceed with task execution or readiness assessments unless the above gate is satisfied and referenced in your status notes.
+- When reporting status, include a short “Spec Coverage” note listing the spec documents and sections reviewed (e.g., “Reviewed: mcp-implementation/requirements.md (Reqs 1–7), domain-model-framework/requirements.md (Reqs 1–6)”).
+
+## Spec Tooling (cc-sdd) — REQUIRED
+
+- You MUST use cc-sdd tools to manage specs in this repo.
+- Required cc-sdd actions per task:
+  - Generate and attach spec coverage for changed areas (list requirement IDs).
+  - Produce requirement-to-change mapping (traceability) and store outputs.
+  - Sync and validate `.kiro/specs` state prior to implementation.
+- Status notes MUST include cc-sdd coverage artifacts and requirement IDs for each change set.
+
 ## Agent assignment guidance
  
 - PR workflow ownership: Assign pull request creation, updates, rebases, and merges to GPT and human maintainers. Avoid assigning PR workflows to Codex.

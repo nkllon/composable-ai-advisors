@@ -7,14 +7,14 @@
 - Google Gemini AI integration for PoD generation
 - Basic API endpoints for PoDs and Spores
 - No orchestrator implementation exists yet
-- No domain model framework exists yet
-- No MCP implementation exists yet
+- Domain model framework available (core load/parse/validate/registry/cache implemented; advanced features pending)
+- MCP layer partially available (config models/manager and basic router endpoints; full services pending)
 
 **Directory Structure**:
 - `backend/main.py` - Current FastAPI application (PoD/Spore functionality)
 - `backend/orchestrator/` - Does not exist yet (needs to be created)
-- `backend/domain_model/` - Does not exist yet (prerequisite)
-- `backend/mcp/` - Does not exist yet (prerequisite)
+- `backend/domain_model/` - Exists (framework implemented, partial)
+- `backend/mcp/` - Exists (manager/config/router implemented, partial)
 
 ---
 
@@ -25,18 +25,23 @@
 1. **Domain Model Framework** (`.kiro/specs/domain-model-framework/`) - REQUIRED
    - The orchestrator uses the Domain Model Framework to load and parse constraint models
    - This enables the bow-tie pattern (general-purpose LLM constrained by models)
-   - Status: Not yet implemented
+   - Status: Partially implemented (core available; remaining features pending)
 
 2. **MCP Implementation** (`.kiro/specs/mcp-implementation/`) - REQUIRED
    - The orchestrator uses MCP for service discovery, context exchange, and traceability
    - All reasoning service communication goes through MCP protocol
-   - Status: Not yet implemented
+   - Status: Partially implemented (config + manager + basic API; services pending)
 
 **Action Required**: Implement the Domain Model Framework and MCP Implementation specs before starting orchestrator implementation.
 
 ---
 
 ## Orchestrator Implementation Tasks
+
+- [ ] 0. Bootstrap orchestrator package
+  - Create `backend/orchestrator/` directory and `__init__.py`
+  - Add stub modules: `models.py`, `constraint_loader.py`, `decomposer.py`, `router.py`, `executor.py`, `synthesizer.py`, `confidence.py`, `metrics.py`, `service.py`
+  - _Requirements: 1.1_
 
 - [ ] 1. Set up project structure and core data models
   - Create `backend/orchestrator/` directory structure

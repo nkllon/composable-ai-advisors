@@ -136,6 +136,11 @@ The system uses **three bow-tie patterns** (all are present):
 - `composable-ai-advisors-architecture.puml` (PlantUML)
 - `composable-ai-advisors-architecture.dot` (Graphviz)
 
+## Spec-Driven Development Gate
+- Treat `.kiro/specs/orchestrator-service/requirements.md` and `.kiro/specs/domain-model-framework/requirements.md` as authoritative for architecture requirements.
+- Before adding or assessing any component, explicitly map it to requirement IDs from those specs and verify acceptance criteria.
+- Include a “Spec Coverage” note in status updates listing reviewed files/sections.
+
 ## When Adding New Components
 
 1. **Identify Domain**: What domain expertise does this provide?

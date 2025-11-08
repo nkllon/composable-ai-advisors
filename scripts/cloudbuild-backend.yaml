@@ -7,26 +7,21 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/ontology-backend:latest']
   
-  # Deploy container image to Cloud Run
+  # Deploy the backend and inject GEMINI_API_KEY from Google Secret Manager
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
-      - 'run'
-      - 'deploy'
-      - 'ontology-backend'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/ontology-backend:latest'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-      - '--port'
-      - '8080'
-      - '--memory'
-      - '2Gi'
-      - '--cpu'
-      - '2'
+      - run
+      - deploy
+      - ontology-backend
+      - --image
+      - gcr.io/$PROJECT_ID/ontology-backend:latest
+      - --region
+      - us-central1
+      - --platform
+      - managed
+      - --quiet
+      - --set-secrets=GEMINI_API_KEY=gemini-api-key:latest
 
 images:
   - 'gcr.io/$PROJECT_ID/ontology-backend:latest'

@@ -19,16 +19,19 @@ import google.generativeai as genai
 app = FastAPI(title="Ontology Framework API", version="1.0.0")
 
 # CORS middleware for frontend
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "*")
+ALLOWED_ORIGINS = [o.strip() for o in FRONTEND_ORIGIN.split(",")] if FRONTEND_ORIGIN else ["*"]
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, specify frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+	CORSMiddleware,
+	allow_origins=ALLOWED_ORIGINS,
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
 )
 
 # Initialize Gemini AI
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash-001")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
@@ -245,6 +248,27 @@ async def health():
     """Health check endpoint"""
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
+@app.get("/health/ai")
+async def health_ai():
+	"""AI readiness check: key presence and model availability"""
+	configured = bool(GEMINI_API_KEY)
+	result: Dict[str, Any] = {
+		"configured": configured,
+		"model": GEMINI_MODEL,
+		"ok": False,
+	}
+	if not configured:
+		return result
+	try:
+		model = genai.GenerativeModel(GEMINI_MODEL)
+		resp = model.generate_content("ping")
+		text = getattr(resp, "text", "")
+		result["ok"] = bool(text is not None)
+		return result
+	except Exception as e:
+		result["error"] = str(e)
+		return result
+
 
 @app.get("/api/pods", response_model=List[PlanOfDay])
 async def get_all_pods():
@@ -321,7 +345,8 @@ async def generate_pod_with_ai(prompt: Dict[str, Any]):
         raise HTTPException(status_code=400, detail="Prompt is required")
     
     try:
-        model = genai.GenerativeModel('gemini-pro')
+        # Use model from env (default to a supported AI Studio model)
+        model = genai.GenerativeModel(GEMINI_MODEL)
         
         system_prompt = """You are an assistant that helps create Plans of Day (PoD) in a structured format.
 A PoD follows the Plan-Do-Check-Act (PDCA) workflow cycle with 4 phases:
