@@ -31,10 +31,15 @@ MCP (Model Context Protocol) is the protocol for secure context exchange, tool s
 ## Implementation Guidelines
 
 ### MCP Configuration
-- Configuration in `.mcp/config.json` (to be added)
+- Configuration in `.mcp/config.json` (schema in `.mcp/schemas/mcp_config.json`)
 - Define MCP servers for each domain model
 - Configure context exchange protocols
 - Set up trace/audit settings
+ 
+### Spec-Driven Development Gate
+- Use `.kiro/specs/mcp-implementation/requirements.md` as the authoritative source for MCP requirements.
+- Before adding endpoints or services, map each change to specific requirement IDs and acceptance criteria.
+- Capture a “Spec Coverage” note in status updates listing the reviewed spec sections (e.g., Reqs 1–7).
 
 ### Domain Model Integration
 - Each domain model registers as MCP server

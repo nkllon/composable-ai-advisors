@@ -273,6 +273,57 @@ To minimize costs:
 - Set appropriate memory/CPU limits
 - Monitor usage in Cloud Console
 
+## Secrets Management
+
+### Local Development (OnePassword + ~/.env)
+
+- If you manage secrets in 1Password, export them to your shell session before running services.
+- You can also keep project secrets in `~/.env` and export them for local runs:
+
+```bash
+set -a
+[ -f "$HOME/.env" ] && . "$HOME/.env"
+set +a
+```
+
+- Ensure `GEMINI_API_KEY` is present in your environment before invoking the backend locally.
+
+### Cloud Run (Google Secret Manager)
+
+Use Google Secret Manager for runtime secrets in Cloud Run. This avoids baking secrets into images and provides rotation, IAM, and audit.
+
+1) Create the secret (or add a new version):
+```bash
+echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets create gemini-api-key --data-file=- || \
+echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets versions add gemini-api-key --data-file=-
+```
+
+2) Grant access to your Cloud Run service account:
+```bash
+PROJECT_NUMBER=$(gcloud projects describe $(gcloud config get-value project) --format="value(projectNumber)")
+SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+gcloud secrets add-iam-policy-binding gemini-api-key \
+  --member="serviceAccount:${SERVICE_ACCOUNT}" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
+3) Deploy (or update) with secret injection:
+```bash
+gcloud run deploy ontology-backend \
+  --image gcr.io/YOUR_PROJECT_ID/ontology-backend:latest \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --port 8080 \
+  --memory 2Gi \
+  --cpu 2 \
+  --set-secrets=GEMINI_API_KEY=gemini-api-key:latest
+```
+
+Notes:
+- The repository’s `backend/service.yaml` no longer embeds `secretKeyRef`; secrets should be injected via `--set-secrets` (or `--update-secrets`) when deploying.
+- Keep CI-only credentials (e.g., Sonar/PyPI tokens) in GitHub Secrets; use Secret Manager for runtime application secrets in Cloud Run.
+
 
 
 

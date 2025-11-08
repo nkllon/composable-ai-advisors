@@ -97,6 +97,22 @@ Refer to `internal-lingo-cheatsheet.md` for full glossary. Key terms:
 - All changes must be applied via git commits on a feature branch and merged by PR.
 - Do not require inline editor approvals for changes; avoid heuristic patching in favor of scripted/tool-driven edits.
 
+## Spec-Driven Development Gate (MANDATORY)
+- Requirements and design are authoritative in `.kiro/specs/`.
+- Before any analysis, implementation, or readiness assessment:
+  1) Open and review the relevant `requirements.md`, `design.md`, and `tasks.md` under `.kiro/specs/{domain-model-framework|mcp-implementation|orchestrator-service}/`
+  2) Map intended changes to explicit requirement IDs and acceptance criteria
+  3) Note “Spec Coverage” in status updates listing the reviewed spec files/sections
+- Do not proceed if this gate is not satisfied. Escalate if spec sections are missing or ambiguous.
+
+## Spec Tooling (cc-sdd) — REQUIRED
+- You MUST use cc-sdd tools to manage specs and traceability.
+- For every change set:
+  - Run cc-sdd coverage to enumerate affected requirements (IDs) and attach the artifact.
+  - Run cc-sdd mapping to link changes to requirements and acceptance criteria.
+  - Validate and sync `.kiro/specs` using cc-sdd before implementation.
+- Status notes MUST include cc-sdd coverage/mapping references and requirement IDs.
+
 ## Important Notes
 
 - The current README.md is hackathon-focused and may not reflect current project state

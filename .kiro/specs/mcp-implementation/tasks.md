@@ -3,24 +3,26 @@
 - [ ] 1. Set up MCP infrastructure and configuration
   - Create `.mcp/config.json` schema and initial configuration file
   - Add configuration validation logic
+  - [x] Provide Pydantic config models in code (`backend/mcp/config.py`) for runtime validation
   - _Requirements: 1.1, 1.2, 1.3, 1.5_
 
 - [ ] 2. Implement MCP Configuration Manager
-  - [ ] 2.1 Create backend/mcp/config_manager.py with MCPServerConfig and MCPConfigManager classes
-    - Create `backend/mcp/` directory and `__init__.py`
-    - Implement `MCPServerConfig` Pydantic model with server_id, name, domain, domain_model_path, endpoint, capabilities, tools, rules, enabled, health_check_url, timeout, command, args, env fields
-    - Implement `MCPConfigManager` class with server and domain model management
-    - Add methods: `load_config()`, `load_domain_model()`, `register_server()`, `get_server()`, `get_domain_model()`, `list_servers()`, `update_server_status()`, `reload_domain_model()`, `validate_server_config()`, `save_server_definition()`
-    - Support filtering servers by domain and capability
+  - [ ] 2.1 Create backend/mcp/manager.py and backend/mcp/config.py with MCPServerConfig and MCPConfigManager classes
+    - [x] Create `backend/mcp/` directory and `__init__.py`
+    - [x] Implement minimal `MCPServerConfig` Pydantic model (id, name, type, endpoint, enabled, metadata)
+    - [ ] Expand `MCPServerConfig` to include: domain, domain_model_path, capabilities, tools, rules, health_check_url, timeout, command, args, env
+    - [x] Implement `MCPConfigManager` with config loading and domain model preloading
+    - [ ] Add methods: `register_server()`, `get_server()`, `get_domain_model()`, `list_servers()`, `update_server_status()`, `reload_domain_model()`, `validate_server_config()`, `save_server_definition()`
+    - [ ] Support filtering servers by domain and capability
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.5, 3.4_
 
   - [ ] 2.2 Add domain model file loading and parsing
-    - Support loading Turtle (.ttl) files using RDFLib
-    - Support loading JSON files
-    - Support loading Markdown (.md) files
-    - Cache loaded domain models in memory
-    - Implement file system watching for automatic reload on changes using watchdog library
-    - Support manual reload via API
+    - [x] Support loading Turtle (.ttl) files using RDFLib
+    - [x] Support loading JSON files
+    - [x] Support loading Markdown (.md) files
+    - [x] Cache loaded domain models in memory
+    - [ ] Implement file system watching for automatic reload on changes using watchdog library
+    - [ ] Support manual reload via API
     - _Requirements: 1.3, 2.1, 10.1, 10.4_
 
   - [ ] 2.3 Implement server definition file management
@@ -237,17 +239,20 @@
 - [ ] 9. Add MCP API endpoints to FastAPI backend
   - [ ] 9.1 Create backend/mcp/router.py with MCP router and endpoints
     - Create FastAPI APIRouter for MCP endpoints
-    - Add `/api/mcp/servers` endpoint (GET) - list all reasoning services
-    - Add `/api/mcp/servers/{id}` endpoint (GET) - get reasoning service details
-    - Add `/api/mcp/servers/{id}/domain-model` endpoint (GET) - get domain model content
+    - [x] Add `/api/mcp/servers` endpoint (GET) - list all reasoning services
+    - [ ] Add `/api/mcp/servers/{id}` endpoint (GET) - get reasoning service details
+    - [ ] Add `/api/mcp/servers/{id}/domain-model` endpoint (GET) - get domain model content
     - Add `/api/mcp/servers/{id}/tools` endpoint (GET) - get tools manifest
     - Add `/api/mcp/servers/{id}/rules` endpoint (GET) - get rules manifest
-    - Add `/api/mcp/health` endpoint (GET) - health check all services
+    - [x] Add `/api/mcp/health` endpoint (GET) - health check all services
     - Add `/api/mcp/context/exchange` endpoint (POST) - exchange context
     - Add `/api/mcp/tools/invoke` endpoint (POST) - invoke tool
     - Add `/api/mcp/rules/evaluate` endpoint (POST) - evaluate rules
     - Add `/api/mcp/trace` endpoint (GET) - query traces
-    - Add `/api/mcp/metrics` endpoint (GET) - Prometheus metrics
+    - [ ] Add `/api/mcp/metrics` endpoint (GET) - Prometheus metrics
+    - [x] Add `/api/mcp/metrics` endpoint (GET) - JSON metrics (interim)
+    - [x] Add `/api/mcp/domain-models` endpoint (GET) - list registered domain models
+    - [x] Add `/api/mcp/reload` endpoint (POST) - reload config and preload models
     - _Requirements: 2.2, 2.3, 2.4, 3.1, 3.5, 4.1, 6.1, 7.1, 7.5, 8.1_
 
   - [ ] 9.2 Add request/response models for API
@@ -257,11 +262,16 @@
     - _Requirements: 2.2, 3.1, 4.1_
 
   - [ ] 9.3 Integrate MCP services with API endpoints and update main.py
-    - Initialize MCP services (ConfigManager, ContextExchange, TraceService, ToolAdapter, RuleManager, HealthMonitor, Orchestrator) in main.py
-    - Include MCP router in FastAPI app
-    - Add error handling and structured error responses (HTTPException with code, message, details, trace_id)
-    - Add startup event to load MCP configuration
+    - [ ] Initialize MCP services (ConfigManager, ContextExchange, TraceService, ToolAdapter, RuleManager, HealthMonitor, Orchestrator) in main.py
+    - [x] Include MCP router in FastAPI app (behind `ENABLE_MCP_API` flag)
+    - [ ] Add error handling and structured error responses (HTTPException with code, message, details, trace_id)
+    - [x] Add startup event to load MCP configuration (in router)
     - _Requirements: 2.2, 3.1, 4.1, 7.1, 8.1_
+
+  - [x] 9.4 Add unit tests for MCP router endpoints (basic)
+    - Tests: `/api/mcp/servers`, `/api/mcp/health`, `/api/mcp/metrics` (JSON), `/api/mcp/domain-models`, `/api/mcp/reload`
+    - Location: `backend/tests/mcp/test_router.py`
+    - _Requirements: 2.2, 7.1_
 
 - [ ] 10. Integrate MCP with existing PoD and Spore infrastructure
   - [ ] 10.1 Update PoD execution to use MCP

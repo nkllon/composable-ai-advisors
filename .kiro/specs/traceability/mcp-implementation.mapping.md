@@ -1,0 +1,63 @@
+# cc-sdd Mapping — mcp-implementation
+
+## Task → Requirement IDs
+- 1. Set up MCP infrastructure and configuration → 1.1, 1.2, 1.3, 1.5
+- 2.1 MCPConfigManager and MCPServerConfig (manager/config) → 1.1, 1.2, 1.3, 1.4, 2.1, 2.5, 3.4
+- 2.2 Domain model loading/parsing/caching → 1.3, 2.1, 10.1, 10.4
+- 2.3 Server definition file management → 1.4, 2.1
+- 2.4 Config manager unit tests → 1.1, 1.2, 1.3, 1.4, 3.4, 10.4
+- 3.1 Trace service (model/storage) → 5.1–5.4
+- 3.2 Trace storage/querying/retention → 5.3–5.5
+- 3.3 Trace service tests → 5.1–5.4
+- 4.1 Context exchange (models/service) → 4.1–4.3
+- 4.2 Transmission + retry/timeout/spores → 4.1, 4.2, 4.4, 6.5
+- 4.3 Integrate with Trace Service → 5.1, 5.2
+- 4.4 Context exchange tests → 4.1–4.4
+- 5.1 Tool adapter registry → 6.1–6.2
+- 5.2 Tools manifest loading → 2.3, 6.1
+- 5.3 Tool invocation + validation/timeouts/tracing → 6.2–6.5
+- 5.4 Tool adapter tests → 2.3, 6.1–6.3, 6.5
+- 6.1 Rule models → 8.1–8.2
+- 6.2 RuleManager → 8.1, 8.3, 8.5
+- 6.3 Rules manifest loading → 2.4, 8.1
+- 6.4 Rule evaluation → 8.3, 8.4
+- 6.5 Conflict resolution → 8.5
+- 6.6 Rule tests → 2.4, 8.1, 8.3, 8.4, 8.5
+- 7.1 Health monitor (model/service) → 7.1–7.3
+- 7.2 Health caching/background refresh → 7.1–7.3
+- 7.3 Prometheus metrics → 7.4, 7.5
+- 7.4 Health monitor tests → 7.1–7.4
+- 7.5 Per-service rate limiting → Design/Rate Limiting
+- 8.1 Orchestrator integration service → 10.1, 10.4
+- 8.2 Decomposition/routing (via MCP) → 3.1–3.4
+- 8.3 Service boundary enforcement → 10.2–10.3
+- 8.4 Confidence evaluation/escalation → 10.5
+- 8.5 Result synthesis → 4.5
+- 8.6 Orchestrator tests → 3.1–3.2, 10.2–10.3, 10.5
+- 9.1 MCP API router endpoints:
+  - `/servers` → 2.2
+  - `/servers/{id}` → 2.2, 3.1
+  - `/servers/{id}/domain-model` → 2.2
+  - `/servers/{id}/tools` → 2.3, 6.1
+  - `/servers/{id}/rules` → 2.4, 8.1
+  - `/health` → 7.1
+  - `/context/exchange` → 4.1
+  - `/tools/invoke` → 6.2
+  - `/rules/evaluate` → 8.3
+  - `/trace` → 5.1–5.4
+  - `/metrics` (Prometheus) → 7.5
+  - JSON metrics (interim) → 7.4
+  - `/domain-models` (list) → 2.2
+  - `/reload` (config reload + preload) → 1.1, 1.2
+- 9.2 API models/OpenAPI/errors → 2.2, 3.1, 4.1
+- 9.3 Backend integration (init/router/startup/errors) → 2.2, 3.1, 4.1, 7.1, 8.1
+- 9.4 Router unit tests (basic) → 2.2, 7.1
+- 10.1–10.3 PoD/Spore integration → 9.1–9.5
+- 11.1–11.4 Example domain model/service/registration → 1.4, 2.1–2.4, 6.1
+- 12.1 Error handling across services → 4.3, 6.3, 8.4
+- 12.2 Logging across services → 5.1–5.2
+- 13.1–13.2 Integration (E2E/API) tests → 2.2, 3.1, 4.1, 5.1–5.2, 7.1
+- 14.1–14.4 Documentation (domain models, services, API, deployment) → 2.1–2.4, 7.5, 10.1
+- 15.1–15.3 Deploy/validate (health/metrics) → 1.1–1.2, 3.1, 4.1, 5.1, 7.1–7.5
+
+
