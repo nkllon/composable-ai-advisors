@@ -1,0 +1,11 @@
+{
+  "extends": "markdownlint-cli2-config-default",
+  "config": {
+    "MD013": false,
+    "MD033": true,
+    "MD018": true,
+    "MD041": true,
+    "MD046": { "style": "fenced" }
+  }
+}
+
