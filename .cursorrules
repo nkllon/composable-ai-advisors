@@ -93,6 +93,10 @@ Refer to `internal-lingo-cheatsheet.md` for full glossary. Key terms:
 - `.cursor/rules/*.mdc` - Detailed rule sets (architecture, ontology, MCP, coding standards, tooling)
   - See `.cursor/rules/tooling.mdc` for deterministic tooling rules (no heuristic editing)
 
+## Operational Editing Policy
+- All changes must be applied via git commits on a feature branch and merged by PR.
+- Do not require inline editor approvals for changes; avoid heuristic patching in favor of scripted/tool-driven edits.
+
 ## Important Notes
 
 - The current README.md is hackathon-focused and may not reflect current project state
