@@ -53,6 +53,11 @@ jobs:
           awk '/\.dot$/' changed_files.txt > changed_dot.txt || true
           echo "puml_count=$(wc -l < changed_puml.txt | tr -d " ")" >> $GITHUB_OUTPUT
           echo "dot_count=$(wc -l < changed_dot.txt | tr -d " ")" >> $GITHUB_OUTPUT
+          # If the architecture markdown changed, force-include its sources
+          if grep -qx 'docs/architecture/composable-ai-advisors-architecture.md' changed_files.txt; then
+            echo "docs/architecture/composable-ai-advisors-architecture.puml" >> changed_puml.txt
+            echo "docs/architecture/composable-ai-advisors-architecture.dot" >> changed_dot.txt
+          fi
 
       - name: Validate PlantUML syntax (changed .puml)
         run: |
