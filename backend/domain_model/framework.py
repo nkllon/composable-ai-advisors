@@ -14,12 +14,12 @@ from .validator import ModelValidator
 class DomainModelFramework:
     """Main interface for domain model management."""
 
-    def __init__(self, base_dir: Path = Path(".mcp/domain-models"), framework_version: str = "1.0.0"):
+    def __init__(self, base_dir: Path = Path(".mcp/domain-models"), framework_version: str = "1.0.0", cache_ttl: int | None = None):
         self.loader = ModelLoader(base_dir)
         self.parser = ModelParser()
         self.validator = ModelValidator(framework_version)
         self.registry = ModelRegistry()
-        self.cache = ModelCache()
+        self.cache = ModelCache(default_ttl=cache_ttl or 300)
         self.metrics: Dict[str, Any] = {
             "load_count": 0,
             "parse_error_count": 0,
