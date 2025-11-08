@@ -1,8 +1,18 @@
-@prefix caa: <http://nkllon.com/ontology/caa#> .
-@prefix orch: <http://nkllon.com/ontology/orchestrator#> .
+@prefix dm: <https://composable.ai/ontology/domain#> .
+@prefix ex: <https://composable.ai/domain-model/> .
 
-orch:config a caa:ConstraintModel ;
-  orch:confidenceThreshold 0.9 ;
-  orch:maxRetries 3 .
-
-
+ex:OrchestratorConstraints a dm:DomainModel ;
+    dm:domainId "orchestrator_constraints" ;
+    dm:domainName "Orchestrator Guardrails" ;
+    dm:description "Defines routing guardrails and escalation thresholds for the bow-tie orchestrator." ;
+    dm:version "1.0.0" ;
+    dm:capability "agent_selection" ,
+        "confidence_gatekeeping" ;
+    dm:tool "trace_log" ;
+    dm:ruleSet "limit_llm_hops" ,
+        "enforce_domain_diversity" ;
+    dm:expertiseKeyword "mcp" ,
+        "governance" ;
+    dm:personaGuideline "Act as an impartial facilitator that enforces evidence and escalation requirements." ;
+    dm:analysisHeuristic "Route questions to at least two domain perspectives when confidence < 0.85." ;
+    dm:analysisHeuristic "Escalate to compliance_officer for any recommendation impacting regulated data." .
