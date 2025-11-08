@@ -83,7 +83,7 @@ async def metrics() -> dict:
 async def list_domain_models() -> list:
 	"""List registered domain models' metadata."""
 	await _ensure_loaded()
-	return [meta.model_dump() for meta in _manager.framework.registry.list_all()]
+	return [{"metadata": meta.model_dump()} for meta in _manager.framework.registry.list_all()]
 
 
 @router.post("/reload")
