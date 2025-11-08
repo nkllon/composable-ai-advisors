@@ -8,7 +8,7 @@ Source: `docs/architecture/composable-ai-advisors-architecture.puml`
 
 Rendered:
 
-![PlantUML rendering](./composable-ai-advisors-architecture.puml.svg)
+![PlantUML rendering](./composable-ai-advisors-architecture.svg)
 
 For reference, the source is included below:
 
