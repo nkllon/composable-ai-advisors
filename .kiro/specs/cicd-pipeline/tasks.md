@@ -55,4 +55,9 @@
 - [x] Add setup guide `docs/tooling/pre-commit.md` for developer workflow
 - _Requirements: CI-REQ-015_
 
+8. Canonical Makefile
+- [x] Add `Makefile` with targets: setup, lint, typecheck, test, markdown, pre-commit-install, ci, run-backend
+- [x] Ensure markdown target uses `.markdownlint.yml`
+- _Requirements: CI-REQ-016_
+
 

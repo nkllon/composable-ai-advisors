@@ -53,6 +53,14 @@ This specification defines the requirements for the Continuous Integration and C
 2. THE documentation SHALL include setup instructions for enabling the hooks and installing markdownlint.
 3. THE local pre-commit behavior SHALL mirror CI markdown rules to minimize drift.
 
+### Requirement 10e — Canonical Make Targets (CI-REQ-016)
+
+#### Acceptance Criteria
+1. THE repository SHALL provide a `Makefile` with targets aligning local dev to CI:
+   - `setup`, `lint`, `typecheck`, `test`, `markdown`, `pre-commit-install`, `ci`, `run-backend`.
+2. THE `markdown` target SHALL use the same `.markdownlint.yml` as CI.
+3. THE `ci` target SHALL execute lint → typecheck → test → markdown sequentially.
+
 ### Requirement 1 — Backend Build, Push, and Deploy
 
 **User Story:** As a developer, I want the backend container to be built, pushed, and deployed automatically, so that I can run the API on Cloud Run.
