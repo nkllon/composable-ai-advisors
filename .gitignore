@@ -1,3 +1,7 @@
+# Ignore temporary or local scripts (prefer standard linters)
+scripts/check_markdown_syntax.py
+scripts/check_mermaid_markdown.py
+scripts/fix_markdown_syntax.py
 # Python
 __pycache__/
 *.py[cod]
