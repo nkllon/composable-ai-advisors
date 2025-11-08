@@ -23,54 +23,71 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz plantuml
 
-      - name: Validate PlantUML syntax (all .puml)
+      - name: Determine changed files
+        id: changes
+        shell: bash
         run: |
-          shopt -s globstar nullglob
-          files=(**/*.puml)
-          if [ ${#files[@]} -gt 0 ]; then
-            plantuml -checkonly "${files[@]}"
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE="origin/${{ github.base_ref }}"
+            git fetch origin "${{ github.base_ref }}" --depth=1
+            CHANGED="$(git diff --name-only "${BASE}"...HEAD)"
           else
-            echo "No .puml files found."
+            BEFORE="${{ github.event.before }}"
+            AFTER="${{ github.sha }}"
+            CHANGED="$(git diff --name-only "${BEFORE}" "${AFTER}")"
+          fi
+          echo "${CHANGED}" | sed '/^\s*$/d' > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt || true
+          # Filter by type
+          awk '/\.puml$/' changed_files.txt > changed_puml.txt || true
+          awk '/\.dot$/' changed_files.txt > changed_dot.txt || true
+          echo "puml_count=$(wc -l < changed_puml.txt | tr -d " ")" >> $GITHUB_OUTPUT
+          echo "dot_count=$(wc -l < changed_dot.txt | tr -d " ")" >> $GITHUB_OUTPUT
+
+      - name: Validate PlantUML syntax (changed .puml)
+        run: |
+          if [ -s changed_puml.txt ]; then
+            xargs -a changed_puml.txt plantuml -checkonly
+          else
+            echo "No changed .puml files."
           fi
 
-      - name: Validate DOT syntax (all .dot)
+      - name: Validate DOT syntax (changed .dot)
         run: |
-          shopt -s globstar nullglob
-          files=(**/*.dot)
-          if [ ${#files[@]} -gt 0 ]; then
-            for f in "${files[@]}"; do
+          if [ -s changed_dot.txt ]; then
+            while IFS= read -r f; do
               dot -Tsvg "$f" -o /dev/null
-            done
+            done < changed_dot.txt
           else
-            echo "No .dot files found."
+            echo "No changed .dot files."
           fi
 
-      - name: Render PlantUML -> SVG (all .puml)
+      - name: Render PlantUML -> SVG (changed .puml)
         run: |
-          shopt -s globstar nullglob
-          files=(**/*.puml)
-          if [ ${#files[@]} -gt 0 ]; then
-            plantuml -tsvg "${files[@]}"
+          if [ -s changed_puml.txt ]; then
+            xargs -a changed_puml.txt plantuml -tsvg
           else
-            echo "No .puml files to render."
+            echo "No changed .puml to render."
           fi
 
-      - name: Render DOT -> SVG (all .dot)
+      - name: Render DOT -> SVG (changed .dot)
         run: |
-          shopt -s globstar nullglob
-          files=(**/*.dot)
-          if [ ${#files[@]} -gt 0 ]; then
-            for f in "${files[@]}"; do
+          if [ -s changed_dot.txt ]; then
+            while IFS= read -r f; do
               dot -Tsvg "$f" -o "${f}.svg"
-            done
+            done < changed_dot.txt
           else
-            echo "No .dot files to render."
+            echo "No changed .dot to render."
           fi
 
       - name: Commit rendered SVGs
