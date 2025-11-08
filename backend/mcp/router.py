@@ -13,6 +13,15 @@ async def _ensure_loaded() -> None:
 		try:
 			await _manager.load()
 			await _manager.preload_domain_models()
+			# As a fallback, if no models are registered but a sample exists, load it explicitly
+			if not _manager.framework.registry.list_all():
+				from pathlib import Path
+				candidate = _manager.framework.loader.base_dir / "sample.ttl"
+				if candidate.exists():
+					try:
+						await _manager.framework.load_domain_model("sample.ttl")
+					except Exception:
+						pass
 		except Exception:
 			# Best-effort; endpoints remain functional with empty config
 			pass
