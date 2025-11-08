@@ -3,6 +3,7 @@ Ontology Framework Backend API
 FastAPI service for managing Plans of Day (PoD) and Spore registries
 """
 from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any, Tuple
@@ -16,7 +17,22 @@ from rdflib import Graph, URIRef, BNode, Namespace
 from rdflib.namespace import RDF, RDFS
 import google.generativeai as genai
 
-app = FastAPI(title="Ontology Framework API", version="1.0.0")
+ENABLE_MCP = os.getenv("ENABLE_MCP_API", "0").lower() in ("1", "true", "yes")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+	# Initialize MCP if enabled
+	if ENABLE_MCP:
+		try:
+			# Import the shared manager from the router and ensure initial load
+			from backend.mcp.router import _ensure_loaded  # type: ignore
+			await _ensure_loaded()
+		except Exception:
+			# Non-fatal during startup; endpoints also ensure lazy load
+			pass
+	yield
+
+app = FastAPI(title="Ontology Framework API", version="1.0.0", lifespan=lifespan)
 
 # CORS middleware for frontend
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "*")
@@ -36,7 +52,7 @@ if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
 # Optionally enable MCP API
-if os.getenv("ENABLE_MCP_API", "0").lower() in ("1", "true", "yes"):
+if ENABLE_MCP:
 	try:
 		from backend.mcp.router import router as mcp_router
 		app.include_router(mcp_router)
