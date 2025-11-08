@@ -111,19 +111,19 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  R[composable-ai-advisors/]
-  R --> backend[backend/ - FastAPI backend service]
-  R --> frontend[frontend/ - React frontend service]
-  R --> docs[docs/ - Documentation]
-  docs --> pod[pod/ - Plans of Day examples]
-  docs --> arch[architecture/ - Architecture diagrams]
-  docs --> arcv[archive/ - Historical/hackathon docs]
-  R --> scripts[scripts/ - Build and deployment scripts]
-  R --> ttl[*.ttl - RDF/Turtle ontology files (root)]
-  R --> agents[agents.md - AI agent guidance]
-  R --> archmd[ARCHITECTURE.md - Architecture documentation]
-  R --> deploymd[DEPLOYMENT.md - Deployment guide]
-  R --> readme[README.md - This file]
+  R["composable-ai-advisors/"]
+  R --> backend["backend/ - FastAPI backend service"]
+  R --> frontend["frontend/ - React frontend service"]
+  R --> docs["docs/ - Documentation"]
+  docs --> pod["pod/ - Plans of Day examples"]
+  docs --> arch["architecture/ - Architecture diagrams"]
+  docs --> arcv["archive/ - Historical/hackathon docs"]
+  R --> scripts["scripts/ - Build and deployment scripts"]
+  R --> ttl["*.ttl - RDF/Turtle ontology files (root)"]
+  R --> agents["agents.md - AI agent guidance"]
+  R --> archmd["ARCHITECTURE.md - Architecture documentation"]
+  R --> deploymd["DEPLOYMENT.md - Deployment guide"]
+  R --> readme["README.md - This file"]
 ```
 
 **Configuration files** (hidden from view):
