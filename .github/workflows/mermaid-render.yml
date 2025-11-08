@@ -22,6 +22,9 @@ jobs:
       - name: Install mermaid-cli
         run: npm install -g @mermaid-js/mermaid-cli
 
+      - name: Check Markdown Mermaid blocks (no HTML breaks)
+        run: python3 scripts/check_mermaid_markdown.py
+
       - name: Render README architecture diagram
         run: mmdc -p tools/mermaid-check/puppeteer-config.json -i tools/mermaid-check/README-architecture.mmd -o tools/mermaid-check/README-architecture.svg
 
