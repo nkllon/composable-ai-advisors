@@ -95,6 +95,5 @@ jobs:
         with:
           commit_message: "chore(ci): render architecture diagrams (PlantUML/DOT) to SVG"
           file_pattern: |
-            **/*.puml.svg
-            **/*.dot.svg
+            docs/architecture/*.svg
 
