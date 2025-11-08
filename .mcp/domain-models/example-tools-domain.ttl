@@ -1,0 +1,9 @@
+@prefix caa: <http://nkllon.com/ontology/caa#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+caa:tools-domain a caa:DomainModel ;
+  rdfs:label "Tools Domain" ;
+  rdfs:comment "Example Tools domain model for MCP scaffolding" ;
+  caa:version "1.0.0" .
+
+

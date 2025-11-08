@@ -31,6 +31,15 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
+# Optionally enable MCP API
+if os.getenv("ENABLE_MCP_API", "0").lower() in ("1", "true", "yes"):
+	try:
+		from backend.mcp.router import router as mcp_router
+		app.include_router(mcp_router)
+	except Exception:
+		# MCP not yet available; ignore during early scaffolding
+		pass
+
 # Namespaces
 PLAN = Namespace("https://ontology.beastmost.com/plan#")
 SPORE = Namespace("https://ontology.beastmost.com/spore#")

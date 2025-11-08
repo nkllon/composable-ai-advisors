@@ -1,0 +1,8 @@
+@prefix caa: <http://nkllon.com/ontology/caa#> .
+@prefix orch: <http://nkllon.com/ontology/orchestrator#> .
+
+orch:config a caa:ConstraintModel ;
+  orch:confidenceThreshold 0.9 ;
+  orch:maxRetries 3 .
+
+

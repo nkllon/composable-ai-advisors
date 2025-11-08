@@ -1,0 +1,4 @@
+@prefix mcp: <http://nkllon.com/ontology/mcp#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+# MCP traces storage (initialized)
+
