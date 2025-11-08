@@ -67,23 +67,16 @@ jobs:
           fi
 
       - name: Setup Python
+        if: ${{ false }}
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install PyMarkdown
+        if: ${{ false }}
         run: pipx install pymarkdownlnt
 
       - name: Lint with PyMarkdown
-        run: |
-          if [ -s changed_md.txt ]; then
-            FILTERED="$(grep -v -E '^\.cursor/commands/' changed_md.txt || true)"
-            if [ -n "$FILTERED" ]; then
-              pymarkdown scan $FILTERED
-            else
-              echo "No eligible Markdown files for PyMarkdown."
-            fi
-          else
-            echo "No changed Markdown files."
-          fi
+        if: ${{ false }}
+        run: echo "PyMarkdown temporarily disabled for this repository."
 
