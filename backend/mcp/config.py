@@ -6,8 +6,9 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, HttpUrl
 
 
-DEFAULT_CONFIG_PATH = Path(".mcp/config.json")
-DEFAULT_DOMAIN_MODELS_DIR = Path(".mcp/domain-models")
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_CONFIG_PATH = ROOT / ".mcp/config.json"
+DEFAULT_DOMAIN_MODELS_DIR = ROOT / ".mcp/domain-models"
 
 
 class CacheConfig(BaseModel):
