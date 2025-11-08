@@ -10,32 +10,34 @@ This document outlines the recommended structure and setup for AI-assisted devel
 
 The current directory structure is well-organized:
 
-```
-composable-ai-advisors/
-├── backend/              # FastAPI backend service
-├── frontend/             # React frontend service
-├── docs/                 # Documentation and PoD files
-├── *.ttl                 # RDF/Turtle ontology files
-└── *.md                  # Documentation files
+```mermaid
+flowchart TD
+  R[composable-ai-advisors/]
+  R --> backend[backend/ - FastAPI backend service]
+  R --> frontend[frontend/ - React frontend service]
+  R --> docs[docs/ - Documentation and PoD files]
+  R --> ttl[*.ttl - RDF/Turtle ontology files]
+  R --> md[*.md - Documentation files]
 ```
 
 ### Recommended Additions
 
-```
-composable-ai-advisors/
-├── .cursor/                      # Cursor IDE configuration
-│   ├── rules/                    # Rule sets for AI guidance
-│   │   ├── architecture.mdc      # Architecture patterns
-│   │   ├── ontology.mdc          # RDF/Turtle conventions
-│   │   ├── mcp.mdc               # MCP protocol guidelines
-│   │   └── coding-standards.mdc  # Code style and patterns
-│   └── context/                  # Context files for AI
-│       └── project-context.md    # Project overview
-├── .mcp/                         # MCP configuration (when added)
-│   └── config.json               # MCP server configuration
-├── agents.md                     # AI agent guidance and instructions
-├── .cursorrules                  # Main Cursor rules file
-└── [existing structure...]
+```mermaid
+flowchart TD
+  R[composable-ai-advisors/]
+  R --> cursor[.cursor/ - Cursor IDE configuration]
+  cursor --> rules[rules/ - Rule sets for AI guidance]
+  rules --> archmdc[architecture.mdc - Architecture patterns]
+  rules --> ontmdc[ontology.mdc - RDF/Turtle conventions]
+  rules --> mcpmdc[mcp.mdc - MCP protocol guidelines]
+  rules --> codemdc[coding-standards.mdc - Code style and patterns]
+  cursor --> context[context/ - Context files for AI]
+  context --> projctx[project-context.md - Project overview]
+  R --> mcp[.mcp/ - MCP configuration (when added)]
+  mcp --> cfg[config.json - MCP server configuration]
+  R --> agents[agents.md - AI agent guidance and instructions]
+  R --> cursorrules[.cursorrules - Main Cursor rules file]
+  R --> existing[[existing structure...]]
 ```
 
 ## Key Files to Create

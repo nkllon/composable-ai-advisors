@@ -55,18 +55,10 @@ The **Ontology Framework** is a modern, full-stack application built for Google 
 
 The application follows a microservices architecture:
 
-```
-┌─────────────┐         ┌─────────────┐
-│   Frontend  │────────▶│   Backend   │
-│  (React)    │  HTTPS  │  (FastAPI)  │
-│  Cloud Run  │         │  Cloud Run  │
-└─────────────┘         └─────────────┘
-                               │
-                               ▼
-                        ┌─────────────┐
-                        │ Gemini AI   │
-                        │   (API)     │
-                        └─────────────┘
+```mermaid
+flowchart LR
+  FE[Frontend<br/>(React)<br/>Cloud Run] -->|HTTPS| BE[Backend<br/>(FastAPI)<br/>Cloud Run]
+  BE --> GEM[Gemini AI API]
 ```
 
 - **Frontend**: React SPA served via Nginx, deployed on Cloud Run
