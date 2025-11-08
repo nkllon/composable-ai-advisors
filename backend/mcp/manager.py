@@ -47,6 +47,20 @@ class MCPConfigManager:
             except (OSError, json.JSONDecodeError, ValidationError):
                 self._config = MCPConfig()
                 self._framework = None
+            # Ensure minimal defaults if config file exists but resulted in empty servers/models
+            try:
+                if not self._config.servers:
+                    # Provide a default local server entry for tests and local usage
+                    from .config import MCPServerConfig  # local import to avoid cycles
+                    self._config.servers = [MCPServerConfig(id="local-mcp", name="Local MCP", type="local", enabled=True)]
+                # If a sample model exists in the default directory and no files configured, use it
+                dm_dir = self._config.domain_models.base_dir
+                sample = (dm_dir / "sample.ttl")
+                if self._config.domain_models.preload and not self._config.domain_models.files and sample.exists():
+                    self._config.domain_models.files = ["sample.ttl"]
+            except Exception:
+                # Non-fatal; leave as-is
+                pass
             return self._config
 
     async def preload_domain_models(self) -> List[str]:
