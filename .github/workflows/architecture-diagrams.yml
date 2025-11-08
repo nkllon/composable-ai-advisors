@@ -107,6 +107,12 @@ jobs:
             dot -Tsvg docs/architecture/composable-ai-advisors-architecture.dot -o docs/architecture/composable-ai-advisors-architecture.dot.svg
           fi
 
+      - name: Rebase onto latest main before committing
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git pull --rebase origin main
+
       - name: Commit rendered SVGs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
