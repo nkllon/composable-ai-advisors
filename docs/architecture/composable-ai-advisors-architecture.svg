@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="646.875px" preserveAspectRatio="none" style="width:909px;height:646px;" version="1.1" viewBox="0 0 909 646" width="909.375px" zoomAndPan="magnify"><defs/><g><text fill="#000000" font-family="sans-serif" font-size="28.125" lengthAdjust="spacingAndGlyphs" textLength="682.8125" x="119.5313" y="26.1063">Composable AI Advisors - Reference Architecture</text><!--MD5=[9ee8e72603389bb0008f5a6df56ce29b]
+entity Orchestrator--><rect fill="#FEFECE" height="82.1777" rx="9.375" ry="9.375" style="stroke: #000000; stroke-width: 2.34375;" width="242.1875" x="311.7188" y="45.2393"/><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="193.75" x="327.3438" y="81.1691">Orchestration LLM</text><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="210.9375" x="327.3438" y="106.633">(General Reasoner)</text><!--MD5=[770389ab9df153645bc6ef28055eb2b5]
+entity A--><rect fill="#FEFECE" height="82.1777" rx="9.375" ry="9.375" style="stroke: #000000; stroke-width: 2.34375;" width="206.25" x="9.375" y="221.8018"/><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="175" x="25" y="257.7316">Domain Model A</text><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="167.1875" x="25" y="283.1955">(Tools + Rules)</text><!--MD5=[b2d39259b6aeabc16b394deeb0238426]
+entity B--><rect fill="#FEFECE" height="82.1777" rx="9.375" ry="9.375" style="stroke: #000000; stroke-width: 2.34375;" width="325" x="270.3125" y="221.8018"/><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="176.5625" x="285.9375" y="257.7316">Domain Model B</text><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="293.75" x="285.9375" y="283.1955">(Investments, etc. + Rules)</text><!--MD5=[16fab723be418f7eaf2ea4bd895a8e51]
+entity C--><rect fill="#FEFECE" height="82.1777" rx="9.375" ry="9.375" style="stroke: #000000; stroke-width: 2.34375;" width="242.1875" x="650.7813" y="221.8018"/><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="176.5625" x="666.4063" y="257.7316">Domain Model C</text><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="210.9375" x="666.4063" y="283.1955">(Cognition + Rules)</text><!--MD5=[6bccee7b4f544d59dd3f9c2ce756935d]
+entity MCP--><rect fill="#FEFECE" height="56.7139" rx="9.375" ry="9.375" style="stroke: #000000; stroke-width: 2.34375;" width="325" x="270.3125" y="398.3643"/><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="293.75" x="285.9375" y="434.2941">MCP Context &amp; Trace Layer</text><!--MD5=[adbc3b47b0f1b1966c2f3e843f0924c6]
+entity Clients--><rect fill="#FEFECE" height="82.1777" rx="9.375" ry="9.375" style="stroke: #000000; stroke-width: 2.34375;" width="579.6875" x="142.9688" y="548.3643"/><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="178.125" x="158.5938" y="584.2941">Clients / Viewers</text><text fill="#000000" font-family="sans-serif" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="548.4375" x="158.5938" y="609.758">Mapper • Legal DocBot • OSINT • Guidance • Audit</text><!--MD5=[56003ca56177f25758e574b5f2847deb]
+link Orchestrator to A--><path d="M358.9219,128.2236 C309.6094,154.9111 244.7656,190.0361 193.9531,217.5361 " fill="none" id="Orchestrator-&gt;A" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="186.5781,221.5361,201.9194,220.3276,193.446,217.8123,195.9613,209.3389,186.5781,221.5361" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[6dac2a447038126c263d45c9dc9ee567]
+link Orchestrator to B--><path d="M432.8125,128.4268 C432.8125,153.833 432.8125,186.7705 432.8125,213.5361 " fill="none" id="Orchestrator-&gt;B" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="432.8125,221.6299,439.1027,207.5853,432.8348,213.8174,426.6027,207.5496,432.8125,221.6299" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[e35046bdf4074e824d364d628f70fdc3]
+link Orchestrator to C--><path d="M511.0313,128.2236 C563.4375,155.0205 632.4375,190.3174 686.3125,217.8799 " fill="none" id="Orchestrator-&gt;C" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="693.4688,221.5361,683.8233,209.5452,686.5217,217.9621,678.1048,220.6605,693.4688,221.5361" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[2d92c36e1967bc7e2c6f02d1ba2e034b]
+link A to MCP--><path d="M192.5,304.7705 C248.1406,332.583 321.1563,369.0986 372.0469,394.5361 " fill="none" id="A-&gt;MCP" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="379.3906,398.208,369.623,386.3164,372.4074,394.7052,364.0186,397.4896,379.3906,398.208" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[a9d408799273274b2b89f1a325cd93ac]
+link B to MCP--><path d="M432.8125,304.7705 C432.8125,330.9111 432.8125,364.7236 432.8125,389.8174 " fill="none" id="B-&gt;MCP" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="432.8125,397.9736,439.0625,383.9111,432.8125,390.1611,426.5625,383.9111,432.8125,397.9736" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[9dd482d07dc22e9c99d27cc26fb8aa87]
+link C to MCP--><path d="M687.1875,304.7705 C628.0625,332.708 550.375,369.3955 496.4844,394.8486 " fill="none" id="C-&gt;MCP" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="489.375,398.208,504.7604,397.8824,496.4454,394.8847,499.4431,386.5697,489.375,398.208" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[fbc0ae032dccb989268e3e23ab6553be]
+link MCP to Clients--><path d="M432.8125,455.2236 C432.8125,478.3486 432.8125,512.1455 432.8125,539.8799 " fill="none" id="MCP-&gt;Clients" style="stroke: #A80036; stroke-width: 1.5625;"/><polygon fill="#A80036" points="432.8125,548.2705,439.0625,534.208,432.8125,540.458,426.5625,534.208,432.8125,548.2705" style="stroke: #A80036; stroke-width: 1.5625;"/><!--MD5=[42ae76a4b38e09eb569b692bf8a85ba5]
+@startuml
+skinparam shadowing false
+skinparam dpi 150
+skinparam rectangle {
+  RoundCorner 12
+  FontSize 14
+}
+title Composable AI Advisors - Reference Architecture
+
+rectangle "Orchestration LLM\n(General Reasoner)" as Orchestrator
+
+rectangle "Domain Model A\n(Tools + Rules)" as A
+rectangle "Domain Model B\n(Investments, etc. + Rules)" as B
+rectangle "Domain Model C\n(Cognition + Rules)" as C
+
+rectangle "MCP Context & Trace Layer" as MCP
+rectangle "Clients / Viewers\nMapper • Legal DocBot • OSINT • Guidance • Audit" as Clients
+
+Orchestrator - -> A
+Orchestrator - -> B
+Orchestrator - -> C
+
+A - -> MCP
+B - -> MCP
+C - -> MCP
+
+MCP - -> Clients
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 10:22:07 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 17.0.17+10
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: null
+--></g></svg>
