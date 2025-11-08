@@ -97,6 +97,16 @@ jobs:
             echo "No changed .dot to render."
           fi
 
+      - name: Always render key architecture diagrams (safety net)
+        run: |
+          set -e
+          if [ -f docs/architecture/composable-ai-advisors-architecture.puml ]; then
+            plantuml -tsvg docs/architecture/composable-ai-advisors-architecture.puml
+          fi
+          if [ -f docs/architecture/composable-ai-advisors-architecture.dot ]; then
+            dot -Tsvg docs/architecture/composable-ai-advisors-architecture.dot -o docs/architecture/composable-ai-advisors-architecture.dot.svg
+          fi
+
       - name: Commit rendered SVGs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
