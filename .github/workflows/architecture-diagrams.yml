@@ -1,0 +1,47 @@
+name: Architecture Diagrams Render
+
+on:
+  pull_request:
+    paths:
+      - 'docs/architecture/composable-ai-advisors-architecture.puml'
+      - 'docs/architecture/composable-ai-advisors-architecture.dot'
+      - 'docs/architecture/composable-ai-advisors-architecture.md'
+  push:
+    branches:
+      - fix/**
+    paths:
+      - 'docs/architecture/composable-ai-advisors-architecture.puml'
+      - 'docs/architecture/composable-ai-advisors-architecture.dot'
+      - 'docs/architecture/composable-ai-advisors-architecture.md'
+  workflow_dispatch:
+
+jobs:
+  render:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz plantuml
+
+      - name: Render PlantUML -> SVG
+        run: |
+          plantuml -tsvg docs/architecture/composable-ai-advisors-architecture.puml
+
+      - name: Render DOT -> SVG
+        run: |
+          dot -Tsvg docs/architecture/composable-ai-advisors-architecture.dot -o docs/architecture/composable-ai-advisors-architecture.dot.svg
+
+      - name: Commit rendered SVGs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(ci): render architecture diagrams (PlantUML/DOT) to SVG"
+          file_pattern: |
+            docs/architecture/composable-ai-advisors-architecture.puml.svg
+            docs/architecture/composable-ai-advisors-architecture.dot.svg
+
