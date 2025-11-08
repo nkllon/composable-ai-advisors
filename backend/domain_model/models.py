@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class DomainModelFormat(str, Enum):
@@ -15,28 +15,28 @@ class DomainModelFormat(str, Enum):
 
 
 class DomainModelMetadata(BaseModel):
-	"""Metadata for a domain model"""
-	domain_id: str
-	domain_name: str
-	description: str
-	version: str
-	format: DomainModelFormat
-	file_path: str
-	loaded_at: datetime
-	capabilities: List[str] = []
-	tools: List[str] = []
-	rule_sets: List[str] = []
-	expertise_keywords: List[str] = []
+        """Metadata for a domain model"""
+
+        domain_id: str
+        domain_name: str
+        description: str
+        version: str
+        format: DomainModelFormat
+        file_path: str
+        loaded_at: datetime
+        capabilities: List[str] = Field(default_factory=list)
+        tools: List[str] = Field(default_factory=list)
+        rule_sets: List[str] = Field(default_factory=list)
+        expertise_keywords: List[str] = Field(default_factory=list)
 
 
 class DomainModel(BaseModel):
-	"""Parsed domain model"""
-	metadata: DomainModelMetadata
-	content: Any  # RDF Graph, dict, or structured text
-	raw_content: str  # Original file content
+        """Parsed domain model"""
+        metadata: DomainModelMetadata
+        content: Any  # RDF Graph, dict, or structured text
+        raw_content: str  # Original file content
 
-	class Config:
-		arbitrary_types_allowed = True
+        model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class ValidationIssue(BaseModel):
@@ -47,8 +47,9 @@ class ValidationIssue(BaseModel):
 
 
 class ValidationResult(BaseModel):
-	"""Result of domain model validation"""
-	is_valid: bool
-	errors: List[ValidationIssue] = []
+        """Result of domain model validation"""
+
+        is_valid: bool
+        errors: List[ValidationIssue] = Field(default_factory=list)
 
 

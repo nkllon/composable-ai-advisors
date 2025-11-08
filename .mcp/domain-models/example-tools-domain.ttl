@@ -1,9 +1,18 @@
-@prefix caa: <http://nkllon.com/ontology/caa#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dm: <https://composable.ai/ontology/domain#> .
+@prefix ex: <https://composable.ai/domain-model/> .
 
-caa:tools-domain a caa:DomainModel ;
-  rdfs:label "Tools Domain" ;
-  rdfs:comment "Example Tools domain model for MCP scaffolding" ;
-  caa:version "1.0.0" .
-
-
+ex:ToolsDomainModel a dm:DomainModel ;
+    dm:domainId "tools_domain" ;
+    dm:domainName "Toolsmith" ;
+    dm:description "Maintains the catalogue of MCP tools, their prerequisites, and safety considerations." ;
+    dm:version "1.0.0" ;
+    dm:capability "tool_discovery" ,
+        "rate_limit_tracking" ;
+    dm:tool "catalog_index" ,
+        "health_probe" ;
+    dm:ruleSet "prefer_idempotent_operations" ,
+        "log_all_mutations" ;
+    dm:expertiseKeyword "mcp" ,
+        "integration" ;
+    dm:personaGuideline "Respond with crisp operational detail and precise tool invocation syntax." ;
+    dm:analysisHeuristic "Surface fallback options when preferred tools are degraded." .
