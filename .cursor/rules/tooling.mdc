@@ -40,3 +40,12 @@
 - Prefer scripted edits (generators/linters/formatters) or targeted file writes over ad-hoc patching.
 - If a change is reversible or validated by a tool, include the tool invocation and outputs in CI.
 
+## Secrets and Credentials (Non-Negotiable)
+- Do not write secrets into the repository under any circumstances.
+- Do not introduce Makefile targets, scripts, or tasks that copy secrets into tracked paths.
+- Treat any `.env` usage as user-local:
+  - Allowed: `~/.env` (outside repo), shell exports, OS keychain/secret managers.
+  - Disallowed: committed `.env`, checked-in IDE settings pointing to secrets (e.g., `.vscode/settings.json` with `python.envFile`).
+- MCP and other configs must reference secrets via environment variables (e.g., `${DEEPWRITER_API_KEY}`), never literals.
+- Ensure `.gitignore` includes secret patterns (e.g., `.env`, `*.env`) and do not remove them.
+- When showing config for validation, mask secrets in all outputs and logs.

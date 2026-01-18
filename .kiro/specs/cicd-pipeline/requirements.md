@@ -66,72 +66,102 @@ This specification defines the requirements for the Continuous Integration and C
 #### Acceptance Criteria
 1. THE workflows SHALL set a `concurrency` group to prevent duplicate runs on the same ref.
 2. THE workflows SHALL `cancel-in-progress: true` for the same group.
+3. THE canonical concurrency group format SHALL be `${{ github.workflow }}-${{ github.ref }}` to avoid cross-branch collisions.
+4. VERIFICATION: Each workflow YAML contains a `concurrency` block with both `group` and `cancel-in-progress: true`.
 
 ### Requirement 10g — Actions Pinning Policy (CI-REQ-018)
 
 #### Acceptance Criteria
 1. ALL GitHub Actions SHALL be pinned to commit SHAs (not just tags).
 2. THE policy SHALL be documented and enforced for new workflows.
+3. THE pinned actions SHALL include `actions/checkout`, `actions/setup-node`, `actions/setup-python`, and any other `uses:` references across CI workflows.
+4. DOCUMENTATION: A policy note SHALL be present at `docs/tooling/actions-pinning.md` describing how to periodically refresh SHAs and review supply-chain advisories.
+5. VERIFICATION: CI lints SHALL fail if non-SHA pins are introduced (policy can be enforced via code review checklist initially).
 
 ### Requirement 10h — Build/Test Caching (CI-REQ-019)
 
 #### Acceptance Criteria
 1. THE CI jobs SHALL use actions/cache (or uv-native cache) for Python dependency wheels and test caches where applicable.
 2. CACHE keys SHALL include OS, Python version, and lockfile hashes (if present).
+3. PYTHON caching keys SHALL include `${{ runner.os }}-py-${{ matrix.python-version }}-uv-${{ hashFiles('**/requirements*.txt') }}` with sensible restore-keys.
+4. UV-native cache MAY be used as an alternative to actions/cache if parity is achieved in hit rates.
+5. VERIFICATION: Workflow logs SHALL display cache hit/miss and restore events.
 
 ### Requirement 10i — Coverage Threshold (CI-REQ-020)
 
 #### Acceptance Criteria
 1. THE test job SHALL collect coverage with pytest-cov and generate coverage.xml.
 2. A minimum coverage threshold (e.g., 70%) SHALL be enforced (job fails under threshold).
+3. COVERAGE command SHALL include `--cov=backend --cov-report=xml:coverage.xml --cov-fail-under=70` (threshold may be adjusted via spec).
+4. ARTIFACTS: `coverage.xml` SHALL be uploaded or made available to downstream consumers (future SonarCloud).
+5. VERIFICATION: Non-compliant PRs SHALL show failed status with explicit coverage threshold failure.
 
 ### Requirement 10j — Supply Chain and Security Scans (CI-REQ-021)
 
 #### Acceptance Criteria
 1. THE CI SHALL run container/image scans (e.g., Trivy) and fail on high-severity vulnerabilities.
 2. THE CI SHALL generate an SBOM (e.g., Syft) as an artifact.
+3. TRIVY SHALL scan both filesystem (`trivy fs --exit-code 1 --severity HIGH,CRITICAL .`) and built images (`trivy image ...`), as applicable.
+4. SYFT SHALL generate SPDX JSON (`syft packages dir:. -o spdx-json > sbom.spdx.json`) and upload it as an artifact.
+5. VERIFICATION: A workflow named `security-scan` SHALL contain these steps and fail on HIGH/CRITICAL vulnerabilities.
 
 ### Requirement 10k — Secret Scanning (CI-REQ-022)
 
 #### Acceptance Criteria
 1. THE CI SHALL run a secret scanner (e.g., gitleaks) against changes.
 2. THE job SHALL fail on confirmed secret findings.
+3. A repository-level `.gitleaks.toml` MAY be provided for false-positive allowlisting (minimize scope; justify entries in comments).
+4. VERIFICATION: The workflow SHALL execute `gitleaks detect --redact` against PR diffs or full repo and fail the job on findings.
 
 ### Requirement 10l — Token Permissions Hardening (CI-REQ-023)
 
 #### Acceptance Criteria
 1. EACH job SHALL explicitly set least-privilege `permissions` (e.g., contents: read).
 2. Elevations (e.g., contents: write) SHALL be scoped to required jobs only.
+3. DEFAULT permissions SHALL be set to `read-all`, with explicit overrides at the job level only when necessary.
+4. VERIFICATION: All workflows SHALL include a top-level or job-level `permissions` block and avoid implicit broad defaults.
 
 ### Requirement 10m — PR Hygiene Automation (CI-REQ-024)
 
 #### Acceptance Criteria
 1. THE repository MAY include a labeler and require at least one label before merge.
 2. AUTOMATIC assignment of reviewers/code owners MAY be configured via CODEOWNERS and labeler.
+3. THE labeler configuration SHALL be stored at `.github/labeler.yml` with patterns for `backend/**`, `frontend/**`, `docs/**`, and `ci/**`.
+4. VERIFICATION: On PRs, labels SHALL be applied automatically based on changed paths.
 
 ### Requirement 10n — Dependency Automation (CI-REQ-025)
 
 #### Acceptance Criteria
 1. THE repository SHALL enable Dependabot/Renovate for Actions and Python dependencies.
 2. PRs from bots SHALL trigger the same CI checks as human PRs.
+3. DEPENDABOT configuration SHALL be added at `.github/dependabot.yml` for ecosystems: `github-actions` (/.github/workflows) and `pip` (/backend), with a weekly schedule.
+4. VERIFICATION: Automatic PRs SHALL be created on schedule with diffs limited to dependency manifests.
 
 ### Requirement 10o — Post-Deploy Smoke Tests (CI-REQ-026)
 
 #### Acceptance Criteria
 1. THE pipeline SHALL run smoke tests (health endpoints/basic calls) after deploy.
 2. FAILING smoke tests SHALL mark the job as failed and prevent promotion; rollback may be manual initially.
+3. SMOKE tests SHALL verify `GET /health` on the backend and at least one core API call returns 2xx; frontend reachability MAY be validated via `/` load and a static asset fetch.
+4. IMPLEMENTATION MAY be in Cloud Build (post-deploy step) or a GitHub workflow with `gcloud` to resolve service URLs.
+5. VERIFICATION: Failing smoke assertions SHALL fail the job and block stage promotions.
 
 ### Requirement 10p — Environment Policies (CI-REQ-027)
 
 #### Acceptance Criteria
 1. CD stages (dev/stage/prod) SHALL require approvals for protected environments (prod).
 2. PROMOTION gates SHALL be documented (manual approval steps or Cloud Build triggers).
+3. IF using GitHub environments, `production` SHALL require reviewers; IF using Cloud Build, a manual approval step SHALL block promotion.
+4. DOCUMENTATION SHALL enumerate promotion paths and approver roles in `DEPLOYMENT.md` or `docs/ops/environments.md`.
 
 ### Requirement 10q — Provenance and Signing (CI-REQ-028)
 
 #### Acceptance Criteria
 1. THE build SHALL produce provenance (SLSA-lite) using GitHub OIDC to GCP where feasible.
 2. IMAGES SHALL be signed (cosign) before deploy; verification policy SHALL be documented.
+3. CONFIGURATION SHALL include GitHub→GCP OIDC federation and `cosign` setup (keyless or key-backed), with verification via `cosign verify`.
+4. DOCUMENTATION SHALL be added at `docs/security/provenance-and-signing.md`, including how to validate image signatures and provenance.
+5. VERIFICATION: A signing step SHALL run in CI/CD before deploy; deployment policies MAY verify signatures at runtime (documented).
 
 ### Requirement 1 — Backend Build, Push, and Deploy
 

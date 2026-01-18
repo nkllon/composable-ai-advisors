@@ -29,6 +29,17 @@
 - Environment policies → CI-REQ-027
 - Provenance/signing → CI-REQ-028
 
+## File-Level Change → Requirement IDs
+- .github/workflows/ci.yml (concurrency, permissions, cache, coverage) → CI-REQ-017, CI-REQ-019, CI-REQ-020, CI-REQ-023
+- .github/workflows/markdown-syntax.yml (concurrency, permissions) → CI-REQ-017, CI-REQ-023
+- .github/workflows/security-scan.yml (Trivy/Syft) → CI-REQ-021
+- .github/workflows/secret-scan.yml (gitleaks) → CI-REQ-022
+- .github/workflows/labeler.yml + .github/labeler.yml → CI-REQ-024
+- .github/dependabot.yml → CI-REQ-025
+- docs/tooling/actions-pinning.md → CI-REQ-018
+- docs/ops/environments.md → CI-REQ-027
+- docs/security/provenance-and-signing.md → CI-REQ-028
+
 ## Artifacts
 - `.pre-commit-config.yaml` → CI-REQ-015
 - `docs/tooling/pre-commit.md` → CI-REQ-015

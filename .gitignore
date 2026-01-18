@@ -85,3 +85,10 @@ temp/
 
 
 tools/node-*
+
+# System and IDE exclusions
+**/.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+*.pyc

@@ -44,34 +44,68 @@ Relates to: CI-REQ-010…CI-REQ-014
    - Consider caching `.pytest_cache` for marginal gains.
 
 9. Coverage (CI-REQ-020)
-   - Enable pytest-cov, generate `coverage.xml`, enforce threshold via `--cov-fail-under=70`.
-   - Optionally upload to codecov (if configured) or store artifact.
+   - Workflow: extend `ci.yml` test job to run:
+     - `pytest --maxfail=1 -q --cov=backend --cov-report=xml:coverage.xml --cov-fail-under=70`
+   - Artifacts: upload `coverage.xml` for future consumers (e.g., SonarCloud).
+   - Threshold: 70% initial; adjust in spec if quality gates evolve.
 
 10. Security Scans and SBOM (CI-REQ-021)
-   - Add Trivy (fs/image) scanning steps; fail on HIGH/CRITICAL.
-   - Generate SBOM via Syft and upload as artifact.
+   - Workflow file: `.github/workflows/security-scan.yml`
+   - Steps:
+     - Setup Trivy; run `trivy fs --exit-code 1 --severity HIGH,CRITICAL .`
+     - Optionally build images and run `trivy image` on `ontology-backend` and `ontology-frontend` tags
+     - Setup Syft; run `syft packages dir:. -o spdx-json > sbom.spdx.json`
+     - Upload `sbom.spdx.json` as an artifact
+   - Failure policy: fail job on HIGH/CRITICAL findings
 
 11. Secret Scanning (CI-REQ-022)
-   - Run gitleaks against PR diffs; fail on findings (with allowlist file if needed).
+   - Workflow file: `.github/workflows/secret-scan.yml`
+   - Steps:
+     - Install `gitleaks`
+     - Run `gitleaks detect --redact` (PR scope preferred); fail on findings
+     - Optional allowlist config at `.gitleaks.toml` for justified exclusions
 
 12. Token Permissions (CI-REQ-023)
-   - Add job-level `permissions` blocks (e.g., `contents: read`); elevate only as needed.
+   - All workflows:
+     - Add top-level `permissions: contents: read`
+     - Override per job only when essential (e.g., `id-token: write` for OIDC)
 
 13. PR Hygiene (CI-REQ-024)
-   - Add `.github/labeler.yml` and a workflow to auto-apply labels.
-   - Optionally require at least one label before merge via branch protection rules.
+   - Files:
+     - `.github/labeler.yml` (path-based label rules)
+     - `.github/workflows/labeler.yml` using `actions/labeler`
+   - Branch protection (out-of-repo): require ≥1 label before merge (optional)
 
 14. Dependency Automation (CI-REQ-025)
-   - Add `.github/dependabot.yml` or Renovate configuration for Actions and Python.
+   - File: `.github/dependabot.yml`
+   - Ecosystems:
+     - `github-actions` in `/.github/workflows`
+     - `pip` in `/backend`
+   - Schedule: weekly
+   - PRs: run same CI checks as human PRs
 
 15. Post-Deploy Smoke (CI-REQ-026)
-   - Define smoke scripts to hit `/health` and core endpoints; fail job on non-2xx.
+   - Option A (Cloud Build): add post-deploy step to run `curl` checks against `ontology-backend` and basic endpoint(s)
+   - Option B (GitHub): workflow job authenticates with `gcloud`, resolves Cloud Run URLs, executes health checks
+   - Backend checks: `GET /health` and 1–2 core endpoints; fail on non-2xx
 
 16. Environment Policies (CI-REQ-027)
-   - Use protected environments with required reviewers for prod in GitHub, or Cloud Build manual approvals for promotions.
+   - GitHub environments:
+     - `production` requires reviewers (org/project admins)
+   - Cloud Build:
+     - Manual approval step between stages; document promotion path
+   - Documentation:
+     - `docs/ops/environments.md` outlines stages, approvers, and triggers
 
 17. Provenance and Signing (CI-REQ-028)
-   - Configure GitHub OIDC to GCP and cosign to sign images; document verification steps for Cloud Run.
+   - OIDC:
+     - Configure GitHub→GCP workload identity federation
+     - Grant minimal roles for signing/push
+   - Cosign:
+     - Use keyless or managed key; sign images pre-deploy
+     - Verify via `cosign verify` in CI
+   - Documentation:
+     - `docs/security/provenance-and-signing.md` with step-by-step verification
 
 # Design Document
 
@@ -109,6 +143,21 @@ The CI/CD pipeline builds and deploys two services (backend FastAPI and frontend
      - Submit frontend Cloud Build with `_BACKEND_URL` substitution set to backend URL
      - Output both service URLs
      - Provide operator guidance for configuring `GEMINI_API_KEY` via Secret Manager
+
+4. GitHub Workflows (CI Quality Gates)
+   - `ci.yml`:
+     - Add concurrency group and permissions
+     - Add caching and coverage enforcement
+   - `markdown-syntax.yml`:
+     - Ensure concurrency and least-privilege permissions
+   - `security-scan.yml`:
+     - Trivy fs/image scans; Syft SBOM artifact
+   - `secret-scan.yml`:
+     - gitleaks detection with redaction
+   - `labeler.yml`:
+     - Auto-apply labels based on changed paths
+   - `.github/dependabot.yml`:
+     - Weekly dependency PRs for actions and Python
 
 4. Dockerfiles
    - Backend: `backend/Dockerfile`

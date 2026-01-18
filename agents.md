@@ -289,6 +289,17 @@ When implementing features, ask:
 - Always prioritize modularity and composability
 - Maintain semantic web standards (RDF/Turtle) for data
 
+## Secrets and Environment Handling Policy
+
+- Never commit secrets or credentials to the repository.
+- Do not introduce any targets or scripts that copy secrets into tracked locations.
+- Environment values for tools (e.g., MCP API keys) must be provided via environment variables at runtime.
+- If a local dotenv file is used, it must live outside the repository (e.g., `~/.env`) and be referenced only via local IDE/user settings, never via tracked project files.
+- `.mcp/config.json` and similar configs must reference secrets using environment interpolation (for example: `${API_KEY_VAR}`), not literal values.
+- Avoid adding editor configuration files that point to secret files (e.g., checked-in `.vscode/settings.json` with `python.envFile`). Such settings should remain user-local.
+- Before committing, verify that `.gitignore` excludes `*.env`, `.env`, and other secret-containing artifacts; do not remove these ignore rules.
+- When logging or printing configuration for verification, mask secret values (show only prefixes/suffixes).
+
 ## Spec-Driven Development (MANDATORY KIRO Gate)
  
 - The authoritative requirements and design live in `.kiro/specs/`.

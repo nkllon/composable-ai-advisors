@@ -35,7 +35,11 @@ MCP (Model Context Protocol) is the protocol for secure context exchange, tool s
 - Define MCP servers for each domain model
 - Configure context exchange protocols
 - Set up trace/audit settings
- 
+- Secrets Policy:
+  - Reference credentials strictly via environment variables (e.g., `${API_KEY}`).
+  - Never commit keys/tokens into `.mcp/*` files.
+  - Document required env vars in README; leave values blank.
+
 ### Spec-Driven Development Gate
 - Use `.kiro/specs/mcp-implementation/requirements.md` as the authoritative source for MCP requirements.
 - Before adding endpoints or services, map each change to specific requirement IDs and acceptance criteria.
